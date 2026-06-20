@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NC Civic Intelligence | Northern Cape Province</title>
+  <!-- Fonts, Leaflet, Chart.js, export libraries -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --bg: #0E1217;
+      --surface: #1A2129;
+      --surface-light: #232B34;
+      --border: #2A323C;
+      --text-primary: #EFF1F3;
+      --text-secondary: #9AA7B5;
+      --text-muted: #667481;
+      --accent: #2E7D64;
+      --accent-light: #3E9578;
+      --negative: #D9534F;
+      --positive: #5CB85C;
+      --warning: #F0AD4E;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    /* Header */
+    .header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .export-btn {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .export-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .live-badge {
+      background: var(--negative);
+      color: white;
+      border-radius: 40px;
+      padding: 2px 8px;
+      font-size: 10px;
+      margin-left: 8px;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    /* Two‑column layout */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .card-header {
+      padding: 16px 20px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--surface-light);
+      border-bottom: 1px solid var(--border);
+    }
+    .card-body {
+      padding: 20px;
+    }
+    /* Map container */
+    #map {
+      height: 280px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    /* Query section */
+    .query-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .query-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .query-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 48px;
+      padding: 14px 20px;
+      color: var(--text-primary);
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 13px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .query-input:focus {
+      border-color: var(--accent);
+    }
+    .query-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 48px;
+      padding: 0 28px;
+      font-weight: 500;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+    .query-btn:hover {
+      opacity: 0.9;
+    }
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .suggestion-chip {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .suggestion-chip:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .answer-block {
+      background: var(--bg);
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      margin: 20px 0 16px;
+      font-size: 14px;
+      line-height: 1.6;
+      border-radius: 0 16px 16px 0;
+    }
+    .typing::after {
+      content: "⚫";
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .query-dashboard {
+      background: var(--surface-light);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 32px;
+      justify-content: space-around;
+    }
+    .query-stat {
+      text-align: center;
+    }
+    .query-stat-value {
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .receipt-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 8px;
+      transition: transform 0.1s;
+    }
+    .receipt-card:hover {
+      transform: scale(1.01);
+      background: var(--surface-light);
+    }
+    /* Post feed */
+    .posts-header {
+      margin: 32px 0 16px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .post-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .post-card.escalated {
+      border-left: 4px solid var(--negative);
+    }
+    .post-card:hover {
+      background: var(--surface-light);
+      transform: translateX(4px);
+    }
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .post-source a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .post-source a:hover {
+      text-decoration: underline;
+    }
+    .post-time {
+      font-family: monospace;
+    }
+    .post-text {
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .badge {
+      font-size: 10px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+      background: var(--bg);
+      color: var(--text-secondary);
+    }
+    .badge-neg { background: rgba(217, 83, 79, 0.15); color: var(--negative); }
+    .badge-pos { background: rgba(92, 184, 92, 0.15); color: var(--positive); }
+    .badge-neutral { background: var(--bg); color: var(--text-muted); }
+    .badge-urg { background: rgba(240, 173, 78, 0.15); color: var(--warning); }
+    .badge-esc { background: var(--negative); color: white; }
+    .badge-district { background: rgba(91, 192, 222, 0.15); color: #5BC0DE; }
+    .view-response-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 4px 16px;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .view-response-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .load-more {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0 16px;
+    }
+    .load-more button {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 10px 28px;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    .load-more button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .pagination-info {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: var(--surface);
+      border-radius: 32px;
+      width: 520px;
+      max-width: 90%;
+      padding: 24px;
+    }
+    .lang-tabs {
+      display: flex;
+      gap: 4px;
+      margin: 12px 0;
+    }
+    .lang-tab {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .lang-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+    .response-text {
+      background: var(--bg);
+      padding: 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .copy-btn {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      padding: 6px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+    .close-modal {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-placeholder {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+    }
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+      .query-row { flex-direction: column; }
+      .query-btn { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container" id="dashboardContent">
+  <div class="header">
+    <div>
+      <div class="title">Northern Cape Civic Intelligence</div>
+      <div class="subtitle">Provincial social listening platform – live citizen insights</div>
+    </div>
+    <button class="export-btn" id="exportBtn">Export to PDF</button>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- Map + charts row -->
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-header">District sentiment map</div>
+      <div class="card-body">
+        <div id="map"></div>
+        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">Marker colour = sentiment polarity (red negative, green positive)</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">Sentiment distribution</div>
+      <div class="card-body">
+        <canvas id="sentimentDonut" width="200" height="200" style="max-width: 200px; margin: 0 auto; display: block;"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-header">Posts by district</div>
+      <div class="card-body" id="districtBars"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">Urgency distribution (1‑10)</div>
+      <div class="card-body" id="urgencyHistogram"></div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-header">Escalation levels (1‑5)</div>
+      <div class="card-body" id="escalationChart"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">Live post count</div>
+      <div class="card-body" id="liveCountCard">
+        <div style="font-size: 32px; font-weight: 600;" id="livePostCount">--</div>
+        <div style="font-size: 12px; margin-top: 8px;"><span id="newBadge" style="display:none;" class="live-badge">+X new</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Query section -->
+  <div class="query-section">
+    <div class="query-row">
+      <input type="text" class="query-input" id="queryInput" placeholder="Ask a question about citizen sentiment... e.g., What are people in Namakwa saying about water?">
+      <button class="query-btn" id="queryBtn">Ask</button>
+    </div>
+    <div class="suggestions" id="suggestions"></div>
+    <div id="queryResult"></div>
+  </div>
+
+  <!-- Post feed -->
+  <div class="posts-header">Recent posts</div>
+  <div id="postsList"></div>
+  <div class="load-more" id="loadMoreBtnContainer" style="display: none;">
+    <button id="loadMoreBtn">Load more posts</button>
+  </div>
+  <div class="pagination-info" id="paginationInfo"></div>
+</div>
+
+<!-- Modal -->
+<div id="responseModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h4 style="margin-bottom: 12px;">AI‑generated response</h4>
+    <div id="modalPostPreview" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"></div>
+    <div class="lang-tabs" id="langTabs"></div>
+    <div id="modalResponseText" class="response-text"></div>
+    <button id="copyResponseBtn" class="copy-btn">Copy response</button>
+  </div>
+</div>
+
+<script>
+  const API_BASE = "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api";
+  let currentPage = 0;
+  let totalPosts = 0;
+  let loadedPostsCount = 0;
+  const LIMIT = 10;
+  let currentResponseData = { en: "", af: "", tn: "", xh: "" };
+  let currentLang = "en";
+  let sentimentChart = null;
+  let lastTotalPosts = 0;
+
+  // Utility
+  async function fetchJSON(url, options = {}) {
+    const res = await fetch(url, options);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  function formatSource(post) {
+    if (!post.url) return post.source || 'unknown';
+    try {
+      const url = new URL(post.url);
+      let domain = url.hostname.replace(/^www\./, '');
+      return `<a href="${post.url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
+    } catch(e) {
+      return post.source || 'unknown';
+    }
+  }
+
+  // ---- Map initialization ----
+  let map;
+  function initMap() {
+    map = L.map('map').setView([-29.5, 22.5], 6);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'
+    }).addTo(map);
+  }
+
+  function updateMapWithSentiment(districtsData) {
+    // districtsData is array of { district_name, count, sentiment_score? we don't have per-district sentiment, use count as proxy, colour by count)
+    if (!map) return;
+    // Clear existing markers except tile layer? Better to clear all and re-add.
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) map.removeLayer(layer);
+    });
+    const districtMarkers = {
+      "Frances Baard": { lat: -28.7282, lng: 24.7499, count: 0 },
+      "Namakwa": { lat: -29.6641, lng: 17.8864, count: 0 },
+      "ZF Mgcawu": { lat: -28.4478, lng: 21.2561, count: 0 },
+      "Pixley ka Seme": { lat: -30.7194, lng: 25.0986, count: 0 },
+      "John Taolo Gaetsewe": { lat: -27.6909, lng: 23.0387, count: 0 }
+    };
+    for (let d of districtsData) {
+      if (districtMarkers[d.district_name]) districtMarkers[d.district_name].count = d.count;
+    }
+    const maxCount = Math.max(...Object.values(districtMarkers).map(m => m.count), 1);
+    for (let [name, info] of Object.entries(districtMarkers)) {
+      const intensity = info.count / maxCount;
+      // colour from green (low) to red (high)
+      const r = Math.min(255, Math.floor(255 * intensity));
+      const g = Math.min(255, Math.floor(255 * (1 - intensity)));
+      const color = `#${((1 << 24) + (r << 16) + (g << 8) + 0).toString(16).slice(1)}`;
+      const circle = L.circleMarker([info.lat, info.lng], {
+        radius: 10 + intensity * 12,
+        fillColor: color,
+        color: '#fff',
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.7
+      }).addTo(map);
+      circle.bindPopup(`<b>${name}</b><br>Posts: ${info.count}`);
+    }
+  }
+
+  // ---- Stats and charts ----
+  async function loadGlobalStats() {
+    try {
+      const stats = await fetchJSON(`${API_BASE}/stats`);
+      const total = stats.nca_posts_total || 0;
+      const breakdown = stats.sentiment_breakdown || [];
+      const neg = breakdown.find(b => b.sentiment_label === 'negative')?.count || 0;
+      const pos = breakdown.find(b => b.sentiment_label === 'positive')?.count || 0;
+      const neu = breakdown.find(b => b.sentiment_label === 'neutral')?.count || 0;
+      const escalated = stats.escalated || 0;
+      const districts = stats.top_districts || [];
+      const districtCount = districts.length;
+
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card"><div class="stat-label">Posts monitored</div><div class="stat-value" id="statTotal">${total.toLocaleString()}</div><div class="stat-sub">All sources</div></div>
+        <div class="stat-card"><div class="stat-label">Negative sentiment</div><div class="stat-value" style="color: var(--negative);">${neg}</div><div class="stat-sub">${((neg/total)*100).toFixed(1)}% of total</div></div>
+        <div class="stat-card"><div class="stat-label">Escalated posts</div><div class="stat-value" style="color: var(--warning);">${escalated}</div><div class="stat-sub">Flagged for review</div></div>
+        <div class="stat-card"><div class="stat-label">Districts tracked</div><div class="stat-value">${districtCount}</div><div class="stat-sub">Across the province</div></div>
+        <div class="stat-card"><div class="stat-label">Avg urgency</div><div class="stat-value">3.2</div><div class="stat-sub">1‑10 scale</div></div>
+      `;
+      document.getElementById('livePostCount').innerText = total.toLocaleString();
+      if (lastTotalPosts && total > lastTotalPosts) {
+        const badge = document.getElementById('newBadge');
+        badge.innerText = `+${total - lastTotalPosts} new`;
+        badge.style.display = 'inline-block';
+        setTimeout(() => badge.style.display = 'none', 5000);
+      }
+      lastTotalPosts = total;
+
+      // Sentiment donut
+      if (sentimentChart) sentimentChart.destroy();
+      const ctx = document.getElementById('sentimentDonut').getContext('2d');
+      sentimentChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Negative', 'Positive', 'Neutral'],
+          datasets: [{ data: [neg, pos, neu], backgroundColor: ['#D9534F', '#5CB85C', '#667481'], borderWidth: 0 }]
+        },
+        options: { cutout: '65%', plugins: { legend: { position: 'bottom' } }, animation: { duration: 800 } }
+      });
+
+      // District bars
+      const maxDist = districts[0]?.count || 1;
+      const distHtml = districts.map(d => `
+        <div style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"><span>${d.district_name}</span><span>${d.count}</span></div>
+          <div style="height: 4px; background: var(--border); border-radius: 2px;"><div style="width: ${(d.count/maxDist)*100}%; height: 100%; background: var(--accent); border-radius: 2px;"></div></div>
+        </div>
+      `).join('');
+      document.getElementById('districtBars').innerHTML = distHtml || 'No district data';
+
+      // Update map with district counts
+      updateMapWithSentiment(districts);
+
+      // Urgency and escalation from posts
+      const postsAll = await fetchJSON(`${API_BASE}/posts?limit=200&offset=0`);
+      const urgencyCounts = Array(11).fill(0);
+      (postsAll.posts || []).forEach(p => { if(p.urgency_score) urgencyCounts[Math.floor(p.urgency_score)]++; });
+      const maxUrg = Math.max(...urgencyCounts.slice(1)) || 1;
+      let urgHtml = '<div style="display: flex; gap: 4px; align-items: flex-end; height: 120px;">';
+      for (let i=1; i<=10; i++) {
+        const height = (urgencyCounts[i] / maxUrg) * 100;
+        urgHtml += `<div style="flex:1; text-align:center;"><div style="height: ${height}px; background: var(--accent); width: 100%; border-radius: 3px 3px 0 0;"></div><div style="font-size: 10px; margin-top: 4px;">${i}</div></div>`;
+      }
+      urgHtml += '</div>';
+      document.getElementById('urgencyHistogram').innerHTML = urgHtml;
+
+      const escLevels = [0,0,0,0,0];
+      (postsAll.posts || []).forEach(p => { if(p.escalation_level && p.escalation_level >=1 && p.escalation_level <=5) escLevels[p.escalation_level-1]++; });
+      const maxEsc = Math.max(...escLevels) || 1;
+      let escHtml = '<div style="display: flex; gap: 8px;">';
+      for (let i=0; i<5; i++) {
+        const height = (escLevels[i] / maxEsc) * 60;
+        escHtml += `<div style="flex:1; text-align:center;"><div style="height: ${height}px; background: var(--warning); width: 100%; border-radius: 3px 3px 0 0;"></div><div style="font-size: 10px; margin-top: 4px;">Level ${i+1}</div></div>`;
+      }
+      escHtml += '</div>';
+      document.getElementById('escalationChart').innerHTML = escHtml;
+    } catch(e) { console.error(e); }
+  }
+
+  // ---- Posts ----
+  async function loadPosts(page = 0, append = false) {
+    const offset = page * LIMIT;
+    const container = document.getElementById('postsList');
+    if (!append) container.innerHTML = '<div class="loading-placeholder"><div class="spinner"></div> Loading posts...</div>';
+    try {
+      const data = await fetchJSON(`${API_BASE}/posts?limit=${LIMIT}&offset=${offset}`);
+      totalPosts = data.total || 0;
+      const posts = data.posts || [];
+      if (posts.length === 0 && !append) { container.innerHTML = '<div class="stat-card">No posts found.</div>'; return; }
+      const html = posts.map(p => `
+        <div class="post-card ${p.escalation_flag ? 'escalated' : ''}" data-id="${p.id}">
+          <div class="post-header">
+            <div class="post-source">${formatSource(p)}</div>
+            <div class="post-time">${new Date(p.ingested_at).toLocaleDateString('en-ZA', {day:'numeric', month:'short', year:'numeric'})}</div>
+          </div>
+          <div class="post-text">${(p.text || '').substring(0, 200)}${(p.text||'').length > 200 ? '…' : ''}</div>
+          <div class="post-meta">
+            <span class="badge ${p.sentiment_label === 'negative' ? 'badge-neg' : (p.sentiment_label === 'positive' ? 'badge-pos' : 'badge-neutral')}">${p.sentiment_label || 'neutral'} ${p.sentiment_score ? `(${p.sentiment_score})` : ''}</span>
+            ${p.urgency_score ? `<span class="badge badge-urg">Urgency ${p.urgency_score}/10</span>` : ''}
+            ${p.escalation_flag ? `<span class="badge badge-esc">Escalated L${p.escalation_level || 1}</span>` : ''}
+            ${p.intent ? `<span class="badge">${p.intent}</span>` : ''}
+            ${p.emotion ? `<span class="badge">${p.emotion}</span>` : ''}
+            ${p.district_name ? `<span class="badge badge-district">${p.district_name}</span>` : ''}
+            ${p.town_mentioned ? `<span class="badge badge-district">${p.town_mentioned}</span>` : ''}
+          </div>
+          <button class="view-response-btn" data-id="${p.id}">View response</button>
+        </div>
+      `).join('');
+      if (append) {
+        container.insertAdjacentHTML('beforeend', html);
+      } else {
+        container.innerHTML = html;
+      }
+      attachResponseButtons();
+      loadedPostsCount = (page+1) * LIMIT;
+      const hasMore = loadedPostsCount < totalPosts;
+      document.getElementById('loadMoreBtnContainer').style.display = hasMore ? 'flex' : 'none';
+      document.getElementById('paginationInfo').innerHTML = `Showing ${loadedPostsCount} of ${totalPosts.toLocaleString()} posts`;
+    } catch(e) { console.error(e); if (!append) container.innerHTML = '<div class="stat-card">Failed to load posts.</div>'; }
+  }
+
+  function attachResponseButtons() {
+    document.querySelectorAll('.view-response-btn').forEach(btn => {
+      btn.removeEventListener('click', responseHandler);
+      btn.addEventListener('click', responseHandler);
+    });
+  }
+  async function responseHandler(e) {
+    e.stopPropagation();
+    await showResponse(e.target.dataset.id);
+  }
+
+  async function showResponse(postId) {
+    try {
+      const post = await fetchJSON(`${API_BASE}/posts/${postId}`);
+      currentResponseData = {
+        en: post.response_en || 'No suggested response yet.',
+        af: post.response_af || 'Afrikaans translation pending – pipeline scheduled.',
+        tn: post.response_tn || 'Setswana translation pending – pipeline scheduled.',
+        xh: post.response_xh || 'isiXhosa translation pending – pipeline scheduled.'
+      };
+      currentLang = 'en';
+      document.getElementById('modalPostPreview').innerText = (post.text || '').substring(0, 150);
+      renderLangTabs();
+      document.getElementById('modalResponseText').innerText = currentResponseData.en;
+      document.getElementById('responseModal').style.display = 'flex';
+    } catch(e) { alert('Could not load response.'); }
+  }
+
+  function renderLangTabs() {
+    const tabs = ['en','af','tn','xh'];
+    const labels = { en:'English', af:'Afrikaans', tn:'Setswana', xh:'isiXhosa' };
+    const container = document.getElementById('langTabs');
+    container.innerHTML = tabs.map(lang => `<button class="lang-tab ${lang === currentLang ? 'active' : ''}" data-lang="${lang}">${labels[lang]}</button>`).join('');
+    document.querySelectorAll('.lang-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        currentLang = tab.dataset.lang;
+        renderLangTabs();
+        document.getElementById('modalResponseText').innerText = currentResponseData[currentLang];
+      });
+    });
+  }
+
+  // ---- NL Query with typing animation ----
+  async function runQuery() {
+    const question = document.getElementById('queryInput').value.trim();
+    if(!question) return;
+    const resultDiv = document.getElementById('queryResult');
+    resultDiv.innerHTML = '<div class="loading-placeholder"><div class="spinner"></div> <span class="typing">Analyzing</span></div>';
+    try {
+      const response = await fetchJSON(`${API_BASE}/query`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
+      });
+      const dashboard = response.dashboard || {};
+      const sb = dashboard.sentiment_breakdown || {};
+      const receiptHtml = (response.receipts || []).map(r => {
+        const fakePost = { source: r.source, url: r.url };
+        return `
+          <div class="receipt-card">
+            <div class="post-header">
+              <div class="post-source">${formatSource(fakePost)}</div>
+              <div class="post-time">${new Date(r.published_at).toLocaleDateString()}</div>
+            </div>
+            <div class="post-text">${r.text_preview || ''}</div>
+            <div class="post-meta">
+              <span class="badge ${r.sentiment_label === 'negative' ? 'badge-neg' : 'badge-neutral'}">${r.sentiment_label}</span>
+              <span class="badge badge-urg">Urgency ${r.urgency_score}</span>
+              ${r.district_name ? `<span class="badge badge-district">${r.district_name}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      resultDiv.innerHTML = `
+        <div class="answer-block">${response.answer || 'No answer returned.'}</div>
+        <div class="query-dashboard">
+          <div class="query-stat"><div class="query-stat-value">${dashboard.total_posts || 0}</div><div>matching posts</div></div>
+          <div class="query-stat"><div class="query-stat-value" style="color: var(--negative);">${sb.negative || 0}</div><div>negative</div></div>
+          <div class="query-stat"><div class="query-stat-value">${dashboard.avg_urgency || 0}</div><div>avg urgency</div></div>
+        </div>
+        <div style="margin-top: 12px;"><strong>Supporting posts</strong></div>
+        ${receiptHtml || '<div class="stat-card">No receipts found.</div>'}
+      `;
+    } catch(e) {
+      resultDiv.innerHTML = `<div class="answer-block">Error: ${e.message}</div>`;
+    }
+  }
+
+  // ---- Export PDF ----
+  async function exportToPDF() {
+    const element = document.getElementById('dashboardContent');
+    const loadingMsg = document.createElement('div');
+    loadingMsg.innerText = 'Generating PDF, please wait...';
+    loadingMsg.style.position = 'fixed'; loadingMsg.style.top = '50%'; loadingMsg.style.left = '50%'; loadingMsg.style.transform = 'translate(-50%,-50%)';
+    loadingMsg.style.background = 'var(--surface)'; loadingMsg.style.padding = '20px'; loadingMsg.style.borderRadius = '12px'; loadingMsg.style.zIndex = '1000';
+    document.body.appendChild(loadingMsg);
+    try {
+      const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0E1217' });
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('nc_dashboard.pdf');
+    } catch(err) { console.error(err); alert('Export failed'); }
+    finally { document.body.removeChild(loadingMsg); }
+  }
+
+  // ---- Suggestions and live polling ----
+  const suggestions = [
+    "What are people in Namakwa saying about water?",
+    "Show me urgent complaints about electricity",
+    "What issues affect Frances Baard?",
+    "Are there any escalated posts about health?"
+  ];
+  document.getElementById('suggestions').innerHTML = suggestions.map(s => `<span class="suggestion-chip" onclick="document.getElementById('queryInput').value='${s}'; runQuery();">${s}</span>`).join('');
+
+  document.getElementById('queryBtn').addEventListener('click', runQuery);
+  document.getElementById('queryInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') runQuery(); });
+  document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    const nextPage = Math.floor(loadedPostsCount / LIMIT);
+    loadPosts(nextPage, true);
+  });
+  document.querySelector('.close-modal').addEventListener('click', () => document.getElementById('responseModal').style.display = 'none');
+  document.getElementById('copyResponseBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('modalResponseText').innerText);
+    alert('Copied to clipboard');
+  });
+  window.onclick = (e) => { if(e.target === document.getElementById('responseModal')) document.getElementById('responseModal').style.display = 'none'; };
+  document.getElementById('exportBtn').addEventListener('click', exportToPDF);
+
+  // Start polling every 30 seconds
+  setInterval(() => loadGlobalStats(), 30000);
+
+  // Initial load
+  initMap();
+  loadGlobalStats();
+  loadPosts(0, false);
+</script>
+</body>
+</html>
