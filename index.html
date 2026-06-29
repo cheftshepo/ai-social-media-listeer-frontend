@@ -1,883 +1,1487 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>NC Civic Intelligence | Northern Cape Province</title>
-  <!-- Fonts, Leaflet, Chart.js, export libraries -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    :root {
-      --bg: #0E1217;
-      --surface: #1A2129;
-      --surface-light: #232B34;
-      --border: #2A323C;
-      --text-primary: #EFF1F3;
-      --text-secondary: #9AA7B5;
-      --text-muted: #667481;
-      --accent: #2E7D64;
-      --accent-light: #3E9578;
-      --negative: #D9534F;
-      --positive: #5CB85C;
-      --warning: #F0AD4E;
-    }
-    body {
-      background: var(--bg);
-      font-family: 'Inter', system-ui, sans-serif;
-      color: var(--text-primary);
-      font-size: 14px;
-      line-height: 1.5;
-      padding: 24px;
-    }
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    /* Header */
-    .header {
-      margin-bottom: 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .title {
-      font-size: 28px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-    }
-    .subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-    .export-btn {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 8px 20px;
-      font-size: 12px;
-      cursor: pointer;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .export-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
-    }
-    /* Stats grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 16px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-    .stat-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-    .stat-value {
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-    .stat-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-    .live-badge {
-      background: var(--negative);
-      color: white;
-      border-radius: 40px;
-      padding: 2px 8px;
-      font-size: 10px;
-      margin-left: 8px;
-      animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.7; }
-      50% { opacity: 1; }
-      100% { opacity: 0.7; }
-    }
-    /* Two‑column layout */
-    .charts-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      overflow: hidden;
-      transition: box-shadow 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-    .card-header {
-      padding: 16px 20px 12px;
-      font-size: 14px;
-      font-weight: 600;
-      background: var(--surface-light);
-      border-bottom: 1px solid var(--border);
-    }
-    .card-body {
-      padding: 20px;
-    }
-    /* Map container */
-    #map {
-      height: 280px;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-top: 8px;
-    }
-    /* Query section */
-    .query-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 24px;
-      margin-bottom: 32px;
-    }
-    .query-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    .query-input {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 48px;
-      padding: 14px 20px;
-      color: var(--text-primary);
-      font-family: 'SF Mono', 'Menlo', monospace;
-      font-size: 13px;
-      outline: none;
-      transition: border 0.2s;
-    }
-    .query-input:focus {
-      border-color: var(--accent);
-    }
-    .query-btn {
-      background: var(--accent);
-      border: none;
-      border-radius: 48px;
-      padding: 0 28px;
-      font-weight: 500;
-      cursor: pointer;
-      color: white;
-      font-size: 14px;
-      transition: opacity 0.2s;
-    }
-    .query-btn:hover {
-      opacity: 0.9;
-    }
-    .suggestions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .suggestion-chip {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 6px 14px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .suggestion-chip:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    .answer-block {
-      background: var(--bg);
-      border-left: 4px solid var(--accent);
-      padding: 16px 20px;
-      margin: 20px 0 16px;
-      font-size: 14px;
-      line-height: 1.6;
-      border-radius: 0 16px 16px 0;
-    }
-    .typing::after {
-      content: "⚫";
-      animation: blink 1s step-end infinite;
-      margin-left: 4px;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-    .query-dashboard {
-      background: var(--surface-light);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
-      display: flex;
-      gap: 32px;
-      justify-content: space-around;
-    }
-    .query-stat {
-      text-align: center;
-    }
-    .query-stat-value {
-      font-size: 28px;
-      font-weight: 600;
-    }
-    .receipt-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 8px;
-      transition: transform 0.1s;
-    }
-    .receipt-card:hover {
-      transform: scale(1.01);
-      background: var(--surface-light);
-    }
-    /* Post feed */
-    .posts-header {
-      margin: 32px 0 16px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    .post-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      transition: all 0.15s;
-      cursor: pointer;
-    }
-    .post-card.escalated {
-      border-left: 4px solid var(--negative);
-    }
-    .post-card:hover {
-      background: var(--surface-light);
-      transform: translateX(4px);
-    }
-    .post-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .post-source a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    .post-source a:hover {
-      text-decoration: underline;
-    }
-    .post-time {
-      font-family: monospace;
-    }
-    .post-text {
-      font-size: 14px;
-      margin-bottom: 12px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .post-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .badge {
-      font-size: 10px;
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-weight: 500;
-      background: var(--bg);
-      color: var(--text-secondary);
-    }
-    .badge-neg { background: rgba(217, 83, 79, 0.15); color: var(--negative); }
-    .badge-pos { background: rgba(92, 184, 92, 0.15); color: var(--positive); }
-    .badge-neutral { background: var(--bg); color: var(--text-muted); }
-    .badge-urg { background: rgba(240, 173, 78, 0.15); color: var(--warning); }
-    .badge-esc { background: var(--negative); color: white; }
-    .badge-district { background: rgba(91, 192, 222, 0.15); color: #5BC0DE; }
-    .view-response-btn {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 4px 16px;
-      font-size: 11px;
-      cursor: pointer;
-      color: var(--text-secondary);
-      transition: all 0.2s;
-    }
-    .view-response-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .load-more {
-      display: flex;
-      justify-content: center;
-      margin: 24px 0 16px;
-    }
-    .load-more button {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 40px;
-      padding: 10px 28px;
-      font-size: 13px;
-      cursor: pointer;
-      color: var(--text-primary);
-      transition: all 0.2s;
-    }
-    .load-more button:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    .pagination-info {
-      text-align: center;
-      margin-top: 16px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: var(--surface);
-      border-radius: 32px;
-      width: 520px;
-      max-width: 90%;
-      padding: 24px;
-    }
-    .lang-tabs {
-      display: flex;
-      gap: 4px;
-      margin: 12px 0;
-    }
-    .lang-tab {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 40px;
-      font-size: 11px;
-      cursor: pointer;
-    }
-    .lang-tab.active {
-      background: var(--accent);
-      color: white;
-    }
-    .response-text {
-      background: var(--bg);
-      padding: 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      margin-bottom: 12px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .copy-btn {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      padding: 6px 16px;
-      border-radius: 40px;
-      cursor: pointer;
-    }
-    .close-modal {
-      float: right;
-      font-size: 22px;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-placeholder {
-      text-align: center;
-      padding: 40px;
-      color: var(--text-muted);
-    }
-    @media (max-width: 768px) {
-      body { padding: 16px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .charts-row { grid-template-columns: 1fr; }
-      .query-row { flex-direction: column; }
-      .query-btn { padding: 12px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echo — Northern Cape Civic Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── NC Government Token System ─────────────────────────────── */
+:root {
+  --green:        #1D5C3A;   /* NC Government Green — thorn tree / primary shield */
+  --green-dark:   #143F28;   /* Deep header green */
+  --green-light:  #2E7A52;   /* Hover / lighter green */
+  --gold:         #C8A951;   /* Namaqua daisy gold */
+  --gold-light:   #E8CB79;   /* Lighter gold accent */
+  --red:          #B5261E;   /* Shield corner red — negative / escalation */
+  --red-light:    #FAE8E7;   /* Red tint background */
+  --blue:         #1B4F8A;   /* Coastal blue — informational */
+  --blue-light:   #E8EEF7;   /* Blue tint */
+  --positive:     #2E7A52;   /* Green for positive sentiment */
+  --positive-bg:  #E8F2EC;
+  --warning:      #A0620A;
+  --warning-bg:   #FEF3E2;
+  --bg:           #F0F4F1;   /* Arid plains — very light green-white */
+  --surface:      #FFFFFF;
+  --surface-2:    #F7FAF8;   /* Slightly tinted white for alternates */
+  --border:       #D4DFDA;   /* Subtle green-toned border */
+  --border-light: #E8EFEB;
+  --text:         #1A2C22;   /* Very dark green-black */
+  --text-2:       #3D5445;   /* Secondary text */
+  --text-3:       #7A9285;   /* Muted */
+  --radius:       12px;
+  --radius-lg:    20px;
+  --shadow:       0 1px 4px rgba(29,92,58,.08), 0 4px 16px rgba(29,92,58,.06);
+  --shadow-sm:    0 1px 3px rgba(29,92,58,.07);
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── Government Header ──────────────────────────────────────── */
+.gov-header {
+  background: var(--green-dark);
+  color: white;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.gov-header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.gov-crest {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px 16px 0;
+  border-right: 1px solid rgba(255,255,255,.15);
+  margin-right: 24px;
+}
+.crest-diamond {
+  width: 42px;
+  height: 42px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.crest-diamond span {
+  transform: rotate(-45deg);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+.crest-text {
+  line-height: 1.25;
+}
+.crest-province {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+}
+.crest-dept {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+.gov-title-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  flex: 1;
+}
+.system-badge {
+  background: var(--gold);
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.system-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+.system-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  margin-top: 1px;
+}
+.gov-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+}
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255,255,255,.6);
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5CB85C;
+  animation: pulse-green 2s infinite;
+}
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(92,184,92,.4); }
+  50%        { opacity: .8; box-shadow: 0 0 0 6px rgba(92,184,92,0); }
+}
+.header-timestamp {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+}
+.export-btn {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.8);
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: inherit;
+}
+.export-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--green-dark); }
+
+/* ── Gold Rule ───────────────────────────────────────────────── */
+.gold-rule {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+}
+
+/* ── Page ────────────────────────────────────────────────────── */
+.page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+/* ── Situation Brief ─────────────────────────────────────────── */
+.situation-brief {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-sm);
+}
+.brief-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3px;
+}
+.brief-text {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.4;
+}
+.brief-text strong { color: var(--text); font-weight: 600; }
+.brief-items {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.brief-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.brief-item-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text);
+}
+.brief-item-value.red   { color: var(--red); }
+.brief-item-value.gold  { color: #8B6A14; }
+.brief-item-value.green { color: var(--green); }
+.brief-item-label {
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── Stats Grid ──────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--border);
+  transition: box-shadow .2s, transform .15s;
+}
+.stat-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.stat-card.accent-green { border-top-color: var(--green); }
+.stat-card.accent-red   { border-top-color: var(--red); }
+.stat-card.accent-gold  { border-top-color: var(--gold); }
+.stat-card.accent-blue  { border-top-color: var(--blue); }
+.stat-card.accent-positive { border-top-color: var(--positive); }
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.stat-value.red     { color: var(--red); }
+.stat-value.gold    { color: #8B6A14; }
+.stat-value.green   { color: var(--green); }
+.stat-value.blue    { color: var(--blue); }
+.stat-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 6px;
+}
+
+/* ── Grid layouts ────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.grid-3-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+/* ── Card ────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+.card:hover { box-shadow: var(--shadow); }
+.card-head {
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-2);
+}
+.card-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  color: var(--text-3);
+  border: 1px solid var(--border);
+}
+.card-body { padding: 20px; }
+.card-body.tight { padding: 16px; }
+
+/* ── Map ─────────────────────────────────────────────────────── */
+#map { height: 260px; border-radius: 10px; overflow: hidden; }
+.map-note { font-size: 10px; color: var(--text-3); text-align: center; margin-top: 8px; }
+
+/* ── District bars ───────────────────────────────────────────── */
+.dist-row { margin-bottom: 14px; }
+.dist-row:last-child { margin-bottom: 0; }
+.dist-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.dist-name { font-size: 12px; color: var(--text-2); }
+.dist-count { font-size: 12px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.dist-bar-track { height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
+.dist-bar-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .6s ease; }
+
+/* ── Topic urgency matrix ────────────────────────────────────── */
+.topic-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.topic-row:last-child { margin-bottom: 0; }
+.topic-name {
+  width: 90px;
+  font-size: 11px;
+  color: var(--text-2);
+  text-transform: capitalize;
+  flex-shrink: 0;
+}
+.topic-bar-wrap { flex: 1; }
+.topic-bar-track { height: 18px; background: var(--border-light); border-radius: 4px; overflow: hidden; position: relative; }
+.topic-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width .6s ease;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+.topic-bar-fill span { font-size: 10px; font-weight: 600; color: white; white-space: nowrap; }
+.topic-urgency { width: 32px; text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+/* ── Language pulse ──────────────────────────────────────────── */
+.lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.lang-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px;
+}
+.lang-flag { font-size: 18px; margin-bottom: 4px; }
+.lang-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); }
+.lang-count { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; color: var(--text); }
+.lang-pct { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.lang-bar { height: 3px; border-radius: 2px; background: var(--green); margin-top: 8px; transition: width .5s; }
+
+/* ── Intent breakdown ────────────────────────────────────────── */
+.intent-list { display: flex; flex-direction: column; gap: 10px; }
+.intent-row { display: flex; align-items: center; gap: 10px; }
+.intent-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.intent-label { font-size: 12px; color: var(--text-2); width: 70px; }
+.intent-bar-track { flex: 1; height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
+.intent-bar-fill { height: 100%; border-radius: 4px; transition: width .6s; }
+.intent-count { font-size: 12px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; width: 38px; text-align: right; }
+
+/* ── Response readiness ──────────────────────────────────────── */
+.readiness-items { display: flex; flex-direction: column; gap: 14px; }
+.readiness-item { display: flex; flex-direction: column; gap: 5px; }
+.readiness-meta { display: flex; justify-content: space-between; align-items: baseline; }
+.readiness-label { font-size: 12px; color: var(--text-2); }
+.readiness-value { font-size: 14px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.readiness-track { height: 7px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
+.readiness-fill { height: 100%; border-radius: 4px; transition: width .7s ease; }
+
+/* ── Query section ───────────────────────────────────────────── */
+.query-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.query-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+.query-heading {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.query-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.query-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 48px;
+  padding: 13px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border .2s, box-shadow .2s;
+}
+.query-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,92,58,.1); }
+.query-input::placeholder { color: var(--text-3); }
+.query-btn {
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 48px;
+  padding: 0 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .2s;
+  white-space: nowrap;
+}
+.query-btn:hover { background: var(--green-light); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 5px 12px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all .15s;
+  font-family: inherit;
+}
+.chip:hover { background: var(--green); color: white; border-color: var(--green); }
+.answer-block {
+  background: var(--surface-2);
+  border-left: 4px solid var(--green);
+  padding: 14px 18px;
+  margin: 20px 0 16px;
+  border-radius: 0 10px 10px 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.answer-meta {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sql-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text-3);
+  font-family: inherit;
+  transition: all .15s;
+}
+.sql-toggle:hover { border-color: var(--green); color: var(--green); }
+.sql-block {
+  background: #1A2C22;
+  color: #8FD9A8;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 12px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+  display: none;
+}
+.rows-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+.rows-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rows-table th {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.rows-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.rows-table tr:last-child td { border-bottom: none; }
+.rows-table tr:hover td { background: var(--surface-2); }
+
+/* ── Posts feed ──────────────────────────────────────────────── */
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.feed-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.feed-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 5px 14px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--text-2);
+  font-family: inherit;
+  transition: all .15s;
+}
+.filter-pill.active, .filter-pill:hover {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  transition: all .15s;
+  cursor: default;
+  box-shadow: var(--shadow-sm);
+}
+.post-card:hover { box-shadow: var(--shadow); border-color: #C4D3CB; }
+.post-card.escalated { border-left: 4px solid var(--red); }
+.post-card.positive  { border-left: 4px solid var(--positive); }
+.post-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 12px; }
+.post-source-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.post-source-link { font-size: 11px; color: var(--green); text-decoration: none; font-weight: 500; }
+.post-source-link:hover { text-decoration: underline; }
+.post-author { font-size: 11px; color: var(--text-3); }
+.post-time { font-size: 11px; color: var(--text-3); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.post-text { font-size: 13px; color: var(--text-2); margin-bottom: 10px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.post-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.tag-neg  { background: var(--red-light); color: var(--red); border-color: rgba(181,38,30,.2); }
+.tag-pos  { background: var(--positive-bg); color: var(--positive); border-color: rgba(46,122,82,.2); }
+.tag-neu  { background: var(--surface-2); color: var(--text-3); border-color: var(--border); }
+.tag-urg  { background: var(--warning-bg); color: var(--warning); border-color: rgba(160,98,10,.2); }
+.tag-esc  { background: var(--red); color: white; }
+.tag-dist { background: var(--blue-light); color: var(--blue); border-color: rgba(27,79,138,.2); }
+.tag-topic { background: rgba(200,169,81,.12); color: #6B5214; border-color: rgba(200,169,81,.3); }
+.view-btn {
+  font-size: 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 3px 12px;
+  cursor: pointer;
+  color: var(--text-3);
+  font-family: inherit;
+  transition: all .15s;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.view-btn:hover { border-color: var(--green); color: var(--green); }
+
+/* ── Load more / pagination ──────────────────────────────────── */
+.load-more-wrap { text-align: center; margin: 24px 0 8px; }
+.load-more-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 40px;
+  padding: 10px 32px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-2);
+  font-family: inherit;
+  font-weight: 500;
+  transition: all .2s;
+}
+.load-more-btn:hover { background: var(--green); border-color: var(--green); color: white; }
+.pagination-note { text-align: center; font-size: 11px; color: var(--text-3); margin-top: 10px; }
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.modal { display: none; position: fixed; inset: 0; background: rgba(20,63,40,.5); backdrop-filter: blur(4px); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.modal.open { display: flex; }
+.modal-box { background: var(--surface); border-radius: 20px; width: 560px; max-width: 100%; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-3); line-height: 1; }
+.modal-preview { font-size: 13px; color: var(--text-3); margin-bottom: 14px; padding: 10px 14px; background: var(--surface-2); border-radius: 8px; border-left: 3px solid var(--border); }
+.lang-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.lang-tab { background: var(--surface-2); border: 1px solid var(--border); border-radius: 40px; padding: 5px 14px; font-size: 11px; cursor: pointer; font-family: inherit; color: var(--text-2); transition: all .15s; }
+.lang-tab.active { background: var(--green); border-color: var(--green); color: white; }
+.response-body { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.65; color: var(--text-2); min-height: 80px; margin-bottom: 14px; }
+.modal-actions { display: flex; gap: 8px; }
+.copy-btn { background: var(--green); color: white; border: none; border-radius: 40px; padding: 8px 20px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 600; }
+.copy-btn:hover { background: var(--green-light); }
+
+/* ── Spinner / loading ───────────────────────────────────────── */
+.spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-cell { text-align: center; padding: 32px; color: var(--text-3); }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .stats-grid  { grid-template-columns: repeat(3, 1fr); }
+  .grid-2, .grid-3-1 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .page { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: 1fr; }
+  .gov-right { display: none; }
+  .query-row { flex-direction: column; }
+}
+</style>
 </head>
 <body>
-<div class="container" id="dashboardContent">
-  <div class="header">
+
+<!-- ── Government Header ───────────────────────────────────── -->
+<header class="gov-header">
+  <div class="gov-header-inner">
+    <div class="gov-crest">
+      <div class="crest-diamond"><span>NC</span></div>
+      <div class="crest-text">
+        <div class="crest-province">Northern Cape Province</div>
+        <div class="crest-dept">Provincial Government</div>
+      </div>
+    </div>
+    <div class="gov-title-block">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px;">
+          <span class="system-badge">Echo</span>
+          <span class="system-name">Civic Intelligence Platform</span>
+        </div>
+        <div class="system-sub">Sa ǁa ǃaĩsi 'uĩsi — Real-time social listening for Northern Cape Province</div>
+      </div>
+    </div>
+    <div class="gov-right">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>Live</span>
+      </div>
+      <div class="header-timestamp" id="headerClock">—</div>
+      <button class="export-btn" id="exportBtn">↓ Export PDF</button>
+    </div>
+  </div>
+</header>
+<div class="gold-rule"></div>
+
+<!-- ── Page ────────────────────────────────────────────────── -->
+<div class="page" id="dashboardContent">
+
+  <!-- Situation Brief -->
+  <div class="situation-brief" id="situationBrief">
     <div>
-      <div class="title">Northern Cape Civic Intelligence</div>
-      <div class="subtitle">Provincial social listening platform – live citizen insights</div>
+      <div class="brief-label">Situation Brief</div>
+      <div class="brief-text" id="briefText">Loading provincial data...</div>
     </div>
-    <button class="export-btn" id="exportBtn">Export to PDF</button>
+    <div class="brief-items" id="briefItems"></div>
   </div>
 
-  <!-- Stats row -->
-  <div class="stats-grid" id="statsGrid"></div>
+  <!-- KPI Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+  </div>
 
-  <!-- Map + charts row -->
-  <div class="charts-row">
+  <!-- Row 1: Trend + Sentiment -->
+  <div class="grid-2" style="margin-bottom:20px;">
     <div class="card">
-      <div class="card-header">District sentiment map</div>
+      <div class="card-head">
+        <span class="card-title">14-Day Sentiment Trend</span>
+        <span class="card-badge">Rolling window</span>
+      </div>
       <div class="card-body">
+        <canvas id="trendChart" height="140"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Sentiment Distribution</span>
+        <span class="card-badge" id="sentimentTotal">—</span>
+      </div>
+      <div class="card-body" style="display:flex;align-items:center;gap:24px;">
+        <canvas id="sentimentDonut" width="160" height="160" style="width:160px;flex-shrink:0;"></canvas>
+        <div id="sentimentLegend" style="flex:1;display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Map + District bars -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">District Sentiment Map</span>
+        <span class="card-badge">NC Province</span>
+      </div>
+      <div class="card-body tight">
         <div id="map"></div>
-        <div style="font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px;">Marker colour = sentiment polarity (red negative, green positive)</div>
+        <div class="map-note">Marker size = post volume · Colour = negative intensity (green → red)</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-header">Sentiment distribution</div>
-      <div class="card-body">
-        <canvas id="sentimentDonut" width="200" height="200" style="max-width: 200px; margin: 0 auto; display: block;"></canvas>
+      <div class="card-head">
+        <span class="card-title">Posts by District</span>
+        <span class="card-badge">Top 6</span>
       </div>
-    </div>
-  </div>
-
-  <div class="charts-row">
-    <div class="card">
-      <div class="card-header">Posts by district</div>
-      <div class="card-body" id="districtBars"></div>
-    </div>
-    <div class="card">
-      <div class="card-header">Urgency distribution (1‑10)</div>
-      <div class="card-body" id="urgencyHistogram"></div>
-    </div>
-  </div>
-
-  <div class="charts-row">
-    <div class="card">
-      <div class="card-header">Escalation levels (1‑5)</div>
-      <div class="card-body" id="escalationChart"></div>
-    </div>
-    <div class="card">
-      <div class="card-header">Live post count</div>
-      <div class="card-body" id="liveCountCard">
-        <div style="font-size: 32px; font-weight: 600;" id="livePostCount">--</div>
-        <div style="font-size: 12px; margin-top: 8px;"><span id="newBadge" style="display:none;" class="live-badge">+X new</span></div>
+      <div class="card-body" id="districtBars">
+        <div class="loading-cell"><span class="spinner"></span></div>
       </div>
     </div>
   </div>
 
-  <!-- Query section -->
+  <!-- Row 3: Topic urgency + Language + Response readiness -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Civic Topic Urgency</span>
+        <span class="card-badge">Avg 1–10</span>
+      </div>
+      <div class="card-body" id="topicUrgency">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Language Pulse</span>
+        <span class="card-badge">Detected language</span>
+      </div>
+      <div class="card-body" id="languagePulse">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Response Readiness</span>
+        <span class="card-badge">Queue status</span>
+      </div>
+      <div class="card-body" id="responseReadiness">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 4: Intent + Source + Geo resolve -->
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Citizen Intent</span>
+        <span class="card-badge">Complaint vs praise</span>
+      </div>
+      <div class="card-body" id="intentBreakdown">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Data Sources</span>
+        <span class="card-badge">Active</span>
+      </div>
+      <div class="card-body" id="sourceBars">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Geographic Resolve</span>
+        <span class="card-badge">Precision level</span>
+      </div>
+      <div class="card-body" id="geoResolve">
+        <div class="loading-cell"><span class="spinner"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ask Echo -->
   <div class="query-section">
+    <div class="query-eyebrow">Echo Intelligence</div>
+    <div class="query-heading">Ask anything about NC citizen sentiment</div>
     <div class="query-row">
-      <input type="text" class="query-input" id="queryInput" placeholder="Ask a question about citizen sentiment... e.g., What are people in Namakwa saying about water?">
-      <button class="query-btn" id="queryBtn">Ask</button>
+      <input type="text" class="query-input" id="queryInput"
+        placeholder="e.g. What are people in Namakwa saying about water this week?">
+      <button class="query-btn" id="queryBtn">Ask Echo</button>
     </div>
-    <div class="suggestions" id="suggestions"></div>
+    <div class="chips" id="suggestionChips"></div>
     <div id="queryResult"></div>
   </div>
 
-  <!-- Post feed -->
-  <div class="posts-header">Recent posts</div>
-  <div id="postsList"></div>
-  <div class="load-more" id="loadMoreBtnContainer" style="display: none;">
-    <button id="loadMoreBtn">Load more posts</button>
+  <!-- Posts Feed -->
+  <div class="feed-header">
+    <div class="feed-title">Recent Posts</div>
+    <div class="feed-filters">
+      <button class="filter-pill active" data-filter="">All</button>
+      <button class="filter-pill" data-filter="negative">Negative</button>
+      <button class="filter-pill" data-filter="positive">Positive</button>
+      <button class="filter-pill" data-filter="escalated">Escalated</button>
+    </div>
   </div>
-  <div class="pagination-info" id="paginationInfo"></div>
-</div>
+  <div id="postsList"><div class="loading-cell"><span class="spinner"></span></div></div>
+  <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+    <button class="load-more-btn" id="loadMoreBtn">Load more posts</button>
+  </div>
+  <div class="pagination-note" id="paginationNote"></div>
 
-<!-- Modal -->
+</div><!-- /page -->
+
+<!-- ── Response Modal ──────────────────────────────────────── -->
 <div id="responseModal" class="modal">
-  <div class="modal-content">
-    <span class="close-modal">&times;</span>
-    <h4 style="margin-bottom: 12px;">AI‑generated response</h4>
-    <div id="modalPostPreview" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;"></div>
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">AI-Generated Response</div>
+      <button class="modal-close" id="closeModal">&times;</button>
+    </div>
+    <div class="modal-preview" id="modalPreview"></div>
     <div class="lang-tabs" id="langTabs"></div>
-    <div id="modalResponseText" class="response-text"></div>
-    <button id="copyResponseBtn" class="copy-btn">Copy response</button>
+    <div class="response-body" id="responseBody"></div>
+    <div class="modal-actions">
+      <button class="copy-btn" id="copyBtn">Copy Response</button>
+    </div>
   </div>
 </div>
 
 <script>
-  const API_BASE = "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api";
-  let currentPage = 0;
-  let totalPosts = 0;
-  let loadedPostsCount = 0;
-  const LIMIT = 10;
-  let currentResponseData = { en: "", af: "", tn: "", xh: "" };
-  let currentLang = "en";
-  let sentimentChart = null;
-  let lastTotalPosts = 0;
+// ── Config ─────────────────────────────────────────────────────
+// LOCAL:  "http://localhost:7071/api"
+// AZURE:  "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api"
+const API = "http://localhost:7071/api";
 
-  // Utility
-  async function fetchJSON(url, options = {}) {
-    const res = await fetch(url, options);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
+// ── State ──────────────────────────────────────────────────────
+let sentimentChart = null;
+let trendChart     = null;
+let currentPage    = 1;
+let totalPosts     = 0;
+let loadedCount    = 0;
+let activeFilter   = "";
+let currentResp    = { en:"", af:"", tn:"", xh:"" };
+let currentLang    = "en";
+const PER_PAGE     = 12;
+
+// ── Clock ──────────────────────────────────────────────────────
+function updateClock() {
+  const el = document.getElementById("headerClock");
+  if (el) el.textContent = new Date().toLocaleString("en-ZA", {
+    dateStyle:"medium", timeStyle:"short"
+  });
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── Fetch helper ───────────────────────────────────────────────
+async function get(path) {
+  const r = await fetch(`${API}${path}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+async function post(path, body) {
+  const r = await fetch(`${API}${path}`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+// ── Source display ─────────────────────────────────────────────
+function fmtSource(p) {
+  if (!p.url) return p.source || "—";
+  try {
+    const d = new URL(p.url).hostname.replace(/^www\./, "");
+    return `<a class="post-source-link" href="${p.url}" target="_blank" rel="noopener">${d}</a>`;
+  } catch { return p.source || "—"; }
+}
+function fmtDate(ds) {
+  if (!ds) return "—";
+  return new Date(ds).toLocaleDateString("en-ZA", { day:"numeric", month:"short", year:"numeric" });
+}
+
+// ── Map ────────────────────────────────────────────────────────
+let map;
+const DISTRICT_COORDS = {
+  "Frances Baard":       [-28.7282, 24.7499],
+  "ZF Mgcawu":           [-28.4478, 21.2561],
+  "Namakwa":             [-29.6641, 17.8864],
+  "Pixley ka Seme":      [-30.7194, 25.0986],
+  "John Taolo Gaetsewe": [-27.6909, 23.0387],
+};
+function initMap() {
+  map = L.map("map", { zoomControl: false }).setView([-29.0, 21.5], 6);
+  L.control.zoom({ position:"bottomright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+  }).addTo(map);
+}
+function updateMap(districts) {
+  if (!map) return;
+  map.eachLayer(l => { if (l instanceof L.CircleMarker) map.removeLayer(l); });
+  const maxCount = Math.max(...districts.map(d => d.count), 1);
+  for (const d of districts) {
+    const coords = DISTRICT_COORDS[d.district_name];
+    if (!coords) continue;
+    const t = d.count / maxCount;
+    const r = Math.round(181 * t), g = Math.round(181 * (1 - t) + 46 * t);
+    const color = `rgb(${r},${g},58)`;
+    L.circleMarker(coords, {
+      radius: 10 + t * 14,
+      fillColor: color, color:"white",
+      weight:1.5, fillOpacity:.75
+    }).addTo(map).bindPopup(`<b>${d.district_name}</b><br>Posts: ${d.count}`);
   }
+}
 
-  function formatSource(post) {
-    if (!post.url) return post.source || 'unknown';
-    try {
-      const url = new URL(post.url);
-      let domain = url.hostname.replace(/^www\./, '');
-      return `<a href="${post.url}" target="_blank" rel="noopener noreferrer">${domain}</a>`;
-    } catch(e) {
-      return post.source || 'unknown';
-    }
-  }
+// ── Load overview stats ────────────────────────────────────────
+async function loadStats() {
+  try {
+    const stats = await get("/stats/overview");
+    const { total_posts:T, positive_count:P, negative_count:N, neutral_count:Nu,
+            escalation_count:E, pending_count:Pend, avg_urgency:AU,
+            top_districts:TD, top_topics:TT, source_breakdown:SB } = stats;
+    const crisisIdx = T > 0 ? ((E / T) * 100).toFixed(1) : "0.0";
 
-  // ---- Map initialization ----
-  let map;
-  function initMap() {
-    map = L.map('map').setView([-29.5, 22.5], 6);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors'
-    }).addTo(map);
-  }
+    // Situation brief
+    document.getElementById("briefText").innerHTML =
+      `<strong>${T?.toLocaleString()}</strong> posts monitored across all channels · ` +
+      `<strong>${E}</strong> escalated · <strong>${Pend}</strong> pending response · ` +
+      `Crisis Index <strong>${crisisIdx}%</strong>`;
+    document.getElementById("briefItems").innerHTML = `
+      <div class="brief-item"><div class="brief-item-value">${T?.toLocaleString()}</div><div class="brief-item-label">Total Posts</div></div>
+      <div class="brief-item"><div class="brief-item-value red">${E}</div><div class="brief-item-label">Escalated</div></div>
+      <div class="brief-item"><div class="brief-item-value gold">${crisisIdx}%</div><div class="brief-item-label">Crisis Index</div></div>
+      <div class="brief-item"><div class="brief-item-value">${AU ? Number(AU).toFixed(1) : "—"}</div><div class="brief-item-label">Avg Urgency</div></div>
+    `;
 
-  function updateMapWithSentiment(districtsData) {
-    // districtsData is array of { district_name, count, sentiment_score? we don't have per-district sentiment, use count as proxy, colour by count)
-    if (!map) return;
-    // Clear existing markers except tile layer? Better to clear all and re-add.
-    map.eachLayer((layer) => {
-      if (layer instanceof L.Marker) map.removeLayer(layer);
-    });
-    const districtMarkers = {
-      "Frances Baard": { lat: -28.7282, lng: 24.7499, count: 0 },
-      "Namakwa": { lat: -29.6641, lng: 17.8864, count: 0 },
-      "ZF Mgcawu": { lat: -28.4478, lng: 21.2561, count: 0 },
-      "Pixley ka Seme": { lat: -30.7194, lng: 25.0986, count: 0 },
-      "John Taolo Gaetsewe": { lat: -27.6909, lng: 23.0387, count: 0 }
-    };
-    for (let d of districtsData) {
-      if (districtMarkers[d.district_name]) districtMarkers[d.district_name].count = d.count;
-    }
-    const maxCount = Math.max(...Object.values(districtMarkers).map(m => m.count), 1);
-    for (let [name, info] of Object.entries(districtMarkers)) {
-      const intensity = info.count / maxCount;
-      // colour from green (low) to red (high)
-      const r = Math.min(255, Math.floor(255 * intensity));
-      const g = Math.min(255, Math.floor(255 * (1 - intensity)));
-      const color = `#${((1 << 24) + (r << 16) + (g << 8) + 0).toString(16).slice(1)}`;
-      const circle = L.circleMarker([info.lat, info.lng], {
-        radius: 10 + intensity * 12,
-        fillColor: color,
-        color: '#fff',
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.7
-      }).addTo(map);
-      circle.bindPopup(`<b>${name}</b><br>Posts: ${info.count}`);
-    }
-  }
+    // Stats grid
+    const negPct = T > 0 ? ((N/T)*100).toFixed(0) : 0;
+    const posPct = T > 0 ? ((P/T)*100).toFixed(0) : 0;
+    document.getElementById("statsGrid").innerHTML = `
+      <div class="stat-card accent-green">
+        <div class="stat-label">Total Posts</div>
+        <div class="stat-value">${T?.toLocaleString() ?? "—"}</div>
+        <div class="stat-sub">All sources combined</div>
+      </div>
+      <div class="stat-card accent-red">
+        <div class="stat-label">Negative Sentiment</div>
+        <div class="stat-value red">${N?.toLocaleString() ?? "—"}</div>
+        <div class="stat-sub">${negPct}% of monitored posts</div>
+      </div>
+      <div class="stat-card accent-positive">
+        <div class="stat-label">Positive Sentiment</div>
+        <div class="stat-value green">${P?.toLocaleString() ?? "—"}</div>
+        <div class="stat-sub">${posPct}% of monitored posts</div>
+      </div>
+      <div class="stat-card accent-gold">
+        <div class="stat-label">Escalated Posts</div>
+        <div class="stat-value gold">${E?.toLocaleString() ?? "—"}</div>
+        <div class="stat-sub">Crisis Index ${crisisIdx}%</div>
+      </div>
+      <div class="stat-card accent-blue">
+        <div class="stat-label">Pending Response</div>
+        <div class="stat-value blue">${Pend?.toLocaleString() ?? "—"}</div>
+        <div class="stat-sub">Awaiting comms team</div>
+      </div>
+    `;
 
-  // ---- Stats and charts ----
-  async function loadGlobalStats() {
-    try {
-      const stats = await fetchJSON(`${API_BASE}/stats`);
-      const total = stats.nca_posts_total || 0;
-      const breakdown = stats.sentiment_breakdown || [];
-      const neg = breakdown.find(b => b.sentiment_label === 'negative')?.count || 0;
-      const pos = breakdown.find(b => b.sentiment_label === 'positive')?.count || 0;
-      const neu = breakdown.find(b => b.sentiment_label === 'neutral')?.count || 0;
-      const escalated = stats.escalated || 0;
-      const districts = stats.top_districts || [];
-      const districtCount = districts.length;
-
-      document.getElementById('statsGrid').innerHTML = `
-        <div class="stat-card"><div class="stat-label">Posts monitored</div><div class="stat-value" id="statTotal">${total.toLocaleString()}</div><div class="stat-sub">All sources</div></div>
-        <div class="stat-card"><div class="stat-label">Negative sentiment</div><div class="stat-value" style="color: var(--negative);">${neg}</div><div class="stat-sub">${((neg/total)*100).toFixed(1)}% of total</div></div>
-        <div class="stat-card"><div class="stat-label">Escalated posts</div><div class="stat-value" style="color: var(--warning);">${escalated}</div><div class="stat-sub">Flagged for review</div></div>
-        <div class="stat-card"><div class="stat-label">Districts tracked</div><div class="stat-value">${districtCount}</div><div class="stat-sub">Across the province</div></div>
-        <div class="stat-card"><div class="stat-label">Avg urgency</div><div class="stat-value">3.2</div><div class="stat-sub">1‑10 scale</div></div>
-      `;
-      document.getElementById('livePostCount').innerText = total.toLocaleString();
-      if (lastTotalPosts && total > lastTotalPosts) {
-        const badge = document.getElementById('newBadge');
-        badge.innerText = `+${total - lastTotalPosts} new`;
-        badge.style.display = 'inline-block';
-        setTimeout(() => badge.style.display = 'none', 5000);
+    // Sentiment donut
+    const donutCtx = document.getElementById("sentimentDonut").getContext("2d");
+    if (sentimentChart) sentimentChart.destroy();
+    sentimentChart = new Chart(donutCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["Negative","Positive","Neutral"],
+        datasets: [{ data:[N,P,Nu],
+          backgroundColor:["#B5261E","#1D5C3A","#9AA89E"],
+          borderWidth:0, hoverOffset:4 }]
+      },
+      options: {
+        cutout:"68%", plugins:{ legend:{ display:false } },
+        animation:{ duration:800 }
       }
-      lastTotalPosts = total;
+    });
+    const legendItems = [
+      { label:"Negative", count:N, color:"#B5261E" },
+      { label:"Positive", count:P, color:"#1D5C3A" },
+      { label:"Neutral",  count:Nu, color:"#9AA89E" },
+    ];
+    document.getElementById("sentimentTotal").textContent = `${T?.toLocaleString()} total`;
+    document.getElementById("sentimentLegend").innerHTML = legendItems.map(it => `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:${it.color};flex-shrink:0;"></div>
+        <span style="font-size:12px;color:var(--text-2);flex:1;">${it.label}</span>
+        <span style="font-size:13px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;">${it.count?.toLocaleString()}</span>
+        <span style="font-size:11px;color:var(--text-3);width:36px;text-align:right;">${T > 0 ? ((it.count/T)*100).toFixed(0) : 0}%</span>
+      </div>
+    `).join("");
 
-      // Sentiment donut
-      if (sentimentChart) sentimentChart.destroy();
-      const ctx = document.getElementById('sentimentDonut').getContext('2d');
-      sentimentChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Negative', 'Positive', 'Neutral'],
-          datasets: [{ data: [neg, pos, neu], backgroundColor: ['#D9534F', '#5CB85C', '#667481'], borderWidth: 0 }]
-        },
-        options: { cutout: '65%', plugins: { legend: { position: 'bottom' } }, animation: { duration: 800 } }
-      });
-
-      // District bars
-      const maxDist = districts[0]?.count || 1;
-      const distHtml = districts.map(d => `
-        <div style="margin-bottom: 12px;">
-          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;"><span>${d.district_name}</span><span>${d.count}</span></div>
-          <div style="height: 4px; background: var(--border); border-radius: 2px;"><div style="width: ${(d.count/maxDist)*100}%; height: 100%; background: var(--accent); border-radius: 2px;"></div></div>
+    // Districts
+    const maxD = TD[0]?.count || 1;
+    document.getElementById("districtBars").innerHTML = (TD || []).slice(0,6).map(d => `
+      <div class="dist-row">
+        <div class="dist-meta">
+          <span class="dist-name">${d.district_name}</span>
+          <span class="dist-count">${d.count.toLocaleString()}</span>
         </div>
-      `).join('');
-      document.getElementById('districtBars').innerHTML = distHtml || 'No district data';
-
-      // Update map with district counts
-      updateMapWithSentiment(districts);
-
-      // Urgency and escalation from posts
-      const postsAll = await fetchJSON(`${API_BASE}/posts?limit=200&offset=0`);
-      const urgencyCounts = Array(11).fill(0);
-      (postsAll.posts || []).forEach(p => { if(p.urgency_score) urgencyCounts[Math.floor(p.urgency_score)]++; });
-      const maxUrg = Math.max(...urgencyCounts.slice(1)) || 1;
-      let urgHtml = '<div style="display: flex; gap: 4px; align-items: flex-end; height: 120px;">';
-      for (let i=1; i<=10; i++) {
-        const height = (urgencyCounts[i] / maxUrg) * 100;
-        urgHtml += `<div style="flex:1; text-align:center;"><div style="height: ${height}px; background: var(--accent); width: 100%; border-radius: 3px 3px 0 0;"></div><div style="font-size: 10px; margin-top: 4px;">${i}</div></div>`;
-      }
-      urgHtml += '</div>';
-      document.getElementById('urgencyHistogram').innerHTML = urgHtml;
-
-      const escLevels = [0,0,0,0,0];
-      (postsAll.posts || []).forEach(p => { if(p.escalation_level && p.escalation_level >=1 && p.escalation_level <=5) escLevels[p.escalation_level-1]++; });
-      const maxEsc = Math.max(...escLevels) || 1;
-      let escHtml = '<div style="display: flex; gap: 8px;">';
-      for (let i=0; i<5; i++) {
-        const height = (escLevels[i] / maxEsc) * 60;
-        escHtml += `<div style="flex:1; text-align:center;"><div style="height: ${height}px; background: var(--warning); width: 100%; border-radius: 3px 3px 0 0;"></div><div style="font-size: 10px; margin-top: 4px;">Level ${i+1}</div></div>`;
-      }
-      escHtml += '</div>';
-      document.getElementById('escalationChart').innerHTML = escHtml;
-    } catch(e) { console.error(e); }
-  }
-
-  // ---- Posts ----
-  async function loadPosts(page = 0, append = false) {
-    const offset = page * LIMIT;
-    const container = document.getElementById('postsList');
-    if (!append) container.innerHTML = '<div class="loading-placeholder"><div class="spinner"></div> Loading posts...</div>';
-    try {
-      const data = await fetchJSON(`${API_BASE}/posts?limit=${LIMIT}&offset=${offset}`);
-      totalPosts = data.total || 0;
-      const posts = data.posts || [];
-      if (posts.length === 0 && !append) { container.innerHTML = '<div class="stat-card">No posts found.</div>'; return; }
-      const html = posts.map(p => `
-        <div class="post-card ${p.escalation_flag ? 'escalated' : ''}" data-id="${p.id}">
-          <div class="post-header">
-            <div class="post-source">${formatSource(p)}</div>
-            <div class="post-time">${new Date(p.ingested_at).toLocaleDateString('en-ZA', {day:'numeric', month:'short', year:'numeric'})}</div>
-          </div>
-          <div class="post-text">${(p.text || '').substring(0, 200)}${(p.text||'').length > 200 ? '…' : ''}</div>
-          <div class="post-meta">
-            <span class="badge ${p.sentiment_label === 'negative' ? 'badge-neg' : (p.sentiment_label === 'positive' ? 'badge-pos' : 'badge-neutral')}">${p.sentiment_label || 'neutral'} ${p.sentiment_score ? `(${p.sentiment_score})` : ''}</span>
-            ${p.urgency_score ? `<span class="badge badge-urg">Urgency ${p.urgency_score}/10</span>` : ''}
-            ${p.escalation_flag ? `<span class="badge badge-esc">Escalated L${p.escalation_level || 1}</span>` : ''}
-            ${p.intent ? `<span class="badge">${p.intent}</span>` : ''}
-            ${p.emotion ? `<span class="badge">${p.emotion}</span>` : ''}
-            ${p.district_name ? `<span class="badge badge-district">${p.district_name}</span>` : ''}
-            ${p.town_mentioned ? `<span class="badge badge-district">${p.town_mentioned}</span>` : ''}
-          </div>
-          <button class="view-response-btn" data-id="${p.id}">View response</button>
+        <div class="dist-bar-track">
+          <div class="dist-bar-fill" style="width:${(d.count/maxD)*100}%"></div>
         </div>
-      `).join('');
-      if (append) {
-        container.insertAdjacentHTML('beforeend', html);
-      } else {
-        container.innerHTML = html;
+      </div>
+    `).join("") || "<p style='color:var(--text-3);font-size:12px;'>No district data yet</p>";
+
+    updateMap(TD || []);
+
+    // Source bars
+    const maxS = SB[0]?.count || 1;
+    const srcColors = { rss:"#1B4F8A", youtube:"#B5261E", reddit:"#D4661A" };
+    document.getElementById("sourceBars").innerHTML = (SB || []).map(s => `
+      <div class="dist-row">
+        <div class="dist-meta">
+          <span class="dist-name" style="text-transform:capitalize;">${s.source}</span>
+          <span class="dist-count">${T > 0 ? ((s.count/T)*100).toFixed(0) : 0}%</span>
+        </div>
+        <div class="dist-bar-track">
+          <div class="dist-bar-fill" style="width:${(s.count/maxS)*100}%;background:${srcColors[s.source]||'var(--green)'}"></div>
+        </div>
+      </div>
+    `).join("") || "<p style='color:var(--text-3);font-size:12px;'>No source data</p>";
+
+    // Response readiness
+    const approved = T - Pend - Math.max(0, T - Pend - E);
+    const pendPct  = T > 0 ? Math.round((Pend / T) * 100) : 0;
+    const escPct   = T > 0 ? Math.round((E / T) * 100) : 0;
+    document.getElementById("responseReadiness").innerHTML = `
+      <div class="readiness-items">
+        <div class="readiness-item">
+          <div class="readiness-meta"><span class="readiness-label">Pending review</span><span class="readiness-value" style="color:var(--warning)">${Pend?.toLocaleString()}</span></div>
+          <div class="readiness-track"><div class="readiness-fill" style="width:${pendPct}%;background:var(--warning)"></div></div>
+        </div>
+        <div class="readiness-item">
+          <div class="readiness-meta"><span class="readiness-label">Escalated (Level 3+)</span><span class="readiness-value" style="color:var(--red)">${E?.toLocaleString()}</span></div>
+          <div class="readiness-track"><div class="readiness-fill" style="width:${escPct}%;background:var(--red)"></div></div>
+        </div>
+        <div class="readiness-item">
+          <div class="readiness-meta"><span class="readiness-label">Crisis Index</span><span class="readiness-value">${crisisIdx}%</span></div>
+          <div class="readiness-track"><div class="readiness-fill" style="width:${crisisIdx}%;background:${crisisIdx >= 10 ? 'var(--red)' : crisisIdx >= 5 ? 'var(--warning)' : 'var(--green)'}"></div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:var(--text-3);">
+        Crisis Index = escalated posts as % of total. Target: below 5%.
+      </div>
+    `;
+
+  } catch(e) { console.error("Stats load failed:", e); }
+}
+
+// ── Load trend chart ───────────────────────────────────────────
+async function loadTrend() {
+  try {
+    const data = await get("/stats/trends?days=14");
+    const trends = data.trends || [];
+    const labels   = trends.map(t => { const d = new Date(t.day); return d.toLocaleDateString("en-ZA",{day:"numeric",month:"short"}); });
+    const negative = trends.map(t => t.negative || 0);
+    const positive = trends.map(t => t.positive || 0);
+    const neutral  = trends.map(t => t.neutral  || 0);
+    const trendCtx = document.getElementById("trendChart").getContext("2d");
+    if (trendChart) trendChart.destroy();
+    trendChart = new Chart(trendCtx, {
+      type:"line",
+      data: {
+        labels,
+        datasets:[
+          { label:"Negative", data:negative, borderColor:"#B5261E", backgroundColor:"rgba(181,38,30,.08)", tension:.4, fill:true, pointRadius:3, borderWidth:2 },
+          { label:"Positive", data:positive, borderColor:"#1D5C3A", backgroundColor:"rgba(29,92,58,.06)",  tension:.4, fill:true, pointRadius:3, borderWidth:2 },
+          { label:"Neutral",  data:neutral,  borderColor:"#9AA89E", backgroundColor:"transparent",         tension:.4, pointRadius:2, borderWidth:1.5, borderDash:[4,3] },
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:true,
+        interaction:{ mode:"index", intersect:false },
+        plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, font:{size:11} } } },
+        scales:{
+          x:{ grid:{ color:"rgba(0,0,0,.05)" }, ticks:{ font:{size:10} } },
+          y:{ grid:{ color:"rgba(0,0,0,.05)" }, ticks:{ font:{size:10} }, beginAtZero:true }
+        }
       }
-      attachResponseButtons();
-      loadedPostsCount = (page+1) * LIMIT;
-      const hasMore = loadedPostsCount < totalPosts;
-      document.getElementById('loadMoreBtnContainer').style.display = hasMore ? 'flex' : 'none';
-      document.getElementById('paginationInfo').innerHTML = `Showing ${loadedPostsCount} of ${totalPosts.toLocaleString()} posts`;
-    } catch(e) { console.error(e); if (!append) container.innerHTML = '<div class="stat-card">Failed to load posts.</div>'; }
-  }
-
-  function attachResponseButtons() {
-    document.querySelectorAll('.view-response-btn').forEach(btn => {
-      btn.removeEventListener('click', responseHandler);
-      btn.addEventListener('click', responseHandler);
     });
-  }
-  async function responseHandler(e) {
-    e.stopPropagation();
-    await showResponse(e.target.dataset.id);
-  }
+  } catch(e) { console.error("Trend load failed:", e); }
+}
 
-  async function showResponse(postId) {
-    try {
-      const post = await fetchJSON(`${API_BASE}/posts/${postId}`);
-      currentResponseData = {
-        en: post.response_en || 'No suggested response yet.',
-        af: post.response_af || 'Afrikaans translation pending – pipeline scheduled.',
-        tn: post.response_tn || 'Setswana translation pending – pipeline scheduled.',
-        xh: post.response_xh || 'isiXhosa translation pending – pipeline scheduled.'
-      };
-      currentLang = 'en';
-      document.getElementById('modalPostPreview').innerText = (post.text || '').substring(0, 150);
-      renderLangTabs();
-      document.getElementById('modalResponseText').innerText = currentResponseData.en;
-      document.getElementById('responseModal').style.display = 'flex';
-    } catch(e) { alert('Could not load response.'); }
-  }
+// ── Load topic urgency + language + intent + geo from posts ────
+async function loadPostDerivedStats() {
+  try {
+    const data = await get(`/posts?per_page=200&page=1`);
+    const posts = data.posts || [];
 
-  function renderLangTabs() {
-    const tabs = ['en','af','tn','xh'];
-    const labels = { en:'English', af:'Afrikaans', tn:'Setswana', xh:'isiXhosa' };
-    const container = document.getElementById('langTabs');
-    container.innerHTML = tabs.map(lang => `<button class="lang-tab ${lang === currentLang ? 'active' : ''}" data-lang="${lang}">${labels[lang]}</button>`).join('');
-    document.querySelectorAll('.lang-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        currentLang = tab.dataset.lang;
-        renderLangTabs();
-        document.getElementById('modalResponseText').innerText = currentResponseData[currentLang];
-      });
-    });
-  }
+    // Topic urgency
+    const topicUrgMap = {};
+    for (const p of posts) {
+      for (const t of (p.civic_topics || [])) {
+        if (!topicUrgMap[t]) topicUrgMap[t] = { sum:0, cnt:0 };
+        topicUrgMap[t].sum += p.urgency_score || 0;
+        topicUrgMap[t].cnt += 1;
+      }
+    }
+    const topics = Object.entries(topicUrgMap)
+      .map(([t,v]) => ({ topic:t, avg: v.sum / v.cnt, cnt: v.cnt }))
+      .sort((a,b) => b.avg - a.avg)
+      .slice(0, 8);
+    const maxUrgCnt = Math.max(...topics.map(t => t.cnt), 1);
+    const urgColors = v => v >= 7 ? "#B5261E" : v >= 5 ? "#A0620A" : "#1D5C3A";
+    document.getElementById("topicUrgency").innerHTML = topics.length
+      ? topics.map(t => `
+        <div class="topic-row">
+          <div class="topic-name">${t.topic.replace(/_/g," ")}</div>
+          <div class="topic-bar-wrap">
+            <div class="topic-bar-track">
+              <div class="topic-bar-fill" style="width:${(t.cnt/maxUrgCnt)*100}%;background:${urgColors(t.avg)};">
+                <span>${t.cnt}</span>
+              </div>
+            </div>
+          </div>
+          <div class="topic-urgency" style="color:${urgColors(t.avg)}">${t.avg.toFixed(1)}</div>
+        </div>
+      `).join("")
+      : "<p style='color:var(--text-3);font-size:12px;'>No topic data yet</p>";
 
-  // ---- NL Query with typing animation ----
-  async function runQuery() {
-    const question = document.getElementById('queryInput').value.trim();
-    if(!question) return;
-    const resultDiv = document.getElementById('queryResult');
-    resultDiv.innerHTML = '<div class="loading-placeholder"><div class="spinner"></div> <span class="typing">Analyzing</span></div>';
-    try {
-      const response = await fetchJSON(`${API_BASE}/query`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
-      });
-      const dashboard = response.dashboard || {};
-      const sb = dashboard.sentiment_breakdown || {};
-      const receiptHtml = (response.receipts || []).map(r => {
-        const fakePost = { source: r.source, url: r.url };
+    // Language pulse
+    const langMap = {};
+    for (const p of posts) {
+      const l = p.detected_language || "en";
+      langMap[l] = (langMap[l] || 0) + 1;
+    }
+    const langOrder = [["en","🇿🇦","English"],["af","🇿🇦","Afrikaans"],["tn","🇿🇦","Setswana"],["xh","🇿🇦","isiXhosa"]];
+    const total = posts.length || 1;
+    const maxLang = Math.max(...Object.values(langMap), 1);
+    document.getElementById("languagePulse").innerHTML = `
+      <div class="lang-grid">${langOrder.map(([code,,name]) => {
+        const cnt = langMap[code] || 0;
+        const pct = ((cnt/total)*100).toFixed(0);
         return `
-          <div class="receipt-card">
-            <div class="post-header">
-              <div class="post-source">${formatSource(fakePost)}</div>
-              <div class="post-time">${new Date(r.published_at).toLocaleDateString()}</div>
-            </div>
-            <div class="post-text">${r.text_preview || ''}</div>
-            <div class="post-meta">
-              <span class="badge ${r.sentiment_label === 'negative' ? 'badge-neg' : 'badge-neutral'}">${r.sentiment_label}</span>
-              <span class="badge badge-urg">Urgency ${r.urgency_score}</span>
-              ${r.district_name ? `<span class="badge badge-district">${r.district_name}</span>` : ''}
-            </div>
+          <div class="lang-item">
+            <div class="lang-flag">${code === "en" ? "🌐" : code === "af" ? "🟢" : code === "tn" ? "🔵" : "🟡"}</div>
+            <div class="lang-name">${name}</div>
+            <div class="lang-count">${cnt.toLocaleString()}</div>
+            <div class="lang-pct">${pct}% of posts</div>
+            <div class="lang-bar" style="width:${(cnt/maxLang)*100}%"></div>
           </div>
         `;
-      }).join('');
-      resultDiv.innerHTML = `
-        <div class="answer-block">${response.answer || 'No answer returned.'}</div>
-        <div class="query-dashboard">
-          <div class="query-stat"><div class="query-stat-value">${dashboard.total_posts || 0}</div><div>matching posts</div></div>
-          <div class="query-stat"><div class="query-stat-value" style="color: var(--negative);">${sb.negative || 0}</div><div>negative</div></div>
-          <div class="query-stat"><div class="query-stat-value">${dashboard.avg_urgency || 0}</div><div>avg urgency</div></div>
+      }).join("")}</div>
+      <p style="margin-top:12px;font-size:11px;color:var(--text-3);">Citizens communicating in ${Object.keys(langMap).length} language${Object.keys(langMap).length > 1 ? 's' : ''}. Responses should match.</p>
+    `;
+
+    // Intent breakdown
+    const intentMap = {};
+    for (const p of posts) { if(p.intent) intentMap[p.intent] = (intentMap[p.intent]||0)+1; }
+    const intentDef = [
+      { key:"complaint", label:"Complaint", color:"#B5261E" },
+      { key:"praise",    label:"Praise",    color:"#1D5C3A" },
+      { key:"question",  label:"Question",  color:"#1B4F8A" },
+      { key:"report",    label:"Report",    color:"#A0620A" },
+      { key:"threat",    label:"Threat",    color:"#5C1010" },
+      { key:"other",     label:"Other",     color:"#7A9285"  },
+    ];
+    const maxIntent = Math.max(...Object.values(intentMap), 1);
+    document.getElementById("intentBreakdown").innerHTML = `
+      <div class="intent-list">
+        ${intentDef.map(i => {
+          const cnt = intentMap[i.key] || 0;
+          return `
+            <div class="intent-row">
+              <div class="intent-dot" style="background:${i.color}"></div>
+              <div class="intent-label">${i.label}</div>
+              <div class="intent-bar-track">
+                <div class="intent-bar-fill" style="width:${(cnt/maxIntent)*100}%;background:${i.color};"></div>
+              </div>
+              <div class="intent-count">${cnt}</div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    // Geographic resolve
+    const geoMap = { 3:0, 2:0, 1:0 };
+    for (const p of posts) { if(p.geo_tier_resolved) geoMap[p.geo_tier_resolved] = (geoMap[p.geo_tier_resolved]||0)+1; }
+    const geoTotal = posts.length || 1;
+    document.getElementById("geoResolve").innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">Town-level precision (Tier 3)</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;width:${((geoMap[3]||0)/geoTotal*100).toFixed(0)}%;background:var(--green);border-radius:4px;"></div>
+            </div>
+            <span style="font-size:13px;font-weight:600;color:var(--green);width:40px;text-align:right;">${((geoMap[3]||0)/geoTotal*100).toFixed(0)}%</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px;">${(geoMap[3]||0).toLocaleString()} posts pinpointed to a specific town</div>
         </div>
-        <div style="margin-top: 12px;"><strong>Supporting posts</strong></div>
-        ${receiptHtml || '<div class="stat-card">No receipts found.</div>'}
-      `;
-    } catch(e) {
-      resultDiv.innerHTML = `<div class="answer-block">Error: ${e.message}</div>`;
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">District-level (Tier 2)</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;width:${((geoMap[2]||0)/geoTotal*100).toFixed(0)}%;background:var(--gold);border-radius:4px;"></div>
+            </div>
+            <span style="font-size:13px;font-weight:600;color:#8B6A14;width:40px;text-align:right;">${((geoMap[2]||0)/geoTotal*100).toFixed(0)}%</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">Province-only (Tier 1)</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
+              <div style="height:100%;width:${((geoMap[1]||0)/geoTotal*100).toFixed(0)}%;background:var(--text-3);border-radius:4px;"></div>
+            </div>
+            <span style="font-size:13px;font-weight:600;color:var(--text-3);width:40px;text-align:right;">${((geoMap[1]||0)/geoTotal*100).toFixed(0)}%</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px;">Improve by adding more tier-3 keywords to the taxonomy</div>
+        </div>
+      </div>
+    `;
+
+  } catch(e) { console.error("Post-derived stats failed:", e); }
+}
+
+// ── Load posts feed ────────────────────────────────────────────
+async function loadPosts(page=1, append=false) {
+  const container = document.getElementById("postsList");
+  if (!append) container.innerHTML = '<div class="loading-cell"><span class="spinner"></span></div>';
+  try {
+    let path = `/posts?page=${page}&per_page=${PER_PAGE}`;
+    if (activeFilter === "negative") path += "&sentiment=negative";
+    else if (activeFilter === "positive") path += "&sentiment=positive";
+    else if (activeFilter === "escalated") path += "&escalated=true";
+
+    const data = await get(path);
+    totalPosts  = data.total || 0;
+    const posts = data.posts || [];
+
+    if (!posts.length && !append) {
+      container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-3);">No posts found for this filter.</p>';
+      return;
     }
+
+    const html = posts.map(p => {
+      const sentClass = p.escalation_flag ? "escalated" : p.sentiment_label === "positive" ? "positive" : "";
+      const sentTag   = p.sentiment_label === "negative" ? "tag-neg" : p.sentiment_label === "positive" ? "tag-pos" : "tag-neu";
+      const topics    = (p.civic_topics||[]).slice(0,3).map(t => `<span class="tag tag-topic">${t.replace(/_/g," ")}</span>`).join("");
+      return `
+        <div class="post-card ${sentClass}">
+          <div class="post-head">
+            <div class="post-source-line">
+              ${fmtSource(p)}
+              ${p.author ? `<span class="post-author">· ${p.author}</span>` : ""}
+            </div>
+            <span class="post-time">${fmtDate(p.published_at || p.ingested_at)}</span>
+          </div>
+          <div class="post-text">${(p.en_translation || p.text || "").substring(0,220)}</div>
+          <div class="post-tags">
+            <span class="tag ${sentTag}">${p.sentiment_label||"neutral"}</span>
+            ${p.urgency_score ? `<span class="tag tag-urg">Urgency ${Number(p.urgency_score).toFixed(1)}</span>` : ""}
+            ${p.escalation_flag ? `<span class="tag tag-esc">ESC L${p.escalation_level||1}</span>` : ""}
+            ${p.district_name ? `<span class="tag tag-dist">${p.district_name}</span>` : ""}
+            ${p.town_mentioned ? `<span class="tag tag-dist">📍 ${p.town_mentioned}</span>` : ""}
+            ${topics}
+            <button class="view-btn" data-id="${p.id}">View Response →</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    if (append) container.insertAdjacentHTML("beforeend", html);
+    else         container.innerHTML = html;
+
+    loadedCount = page * PER_PAGE;
+    document.getElementById("loadMoreWrap").style.display = loadedCount < totalPosts ? "block" : "none";
+    document.getElementById("paginationNote").textContent = `Showing ${Math.min(loadedCount, totalPosts).toLocaleString()} of ${totalPosts.toLocaleString()} posts`;
+
+    container.querySelectorAll(".view-btn").forEach(btn => {
+      btn.addEventListener("click", e => { e.stopPropagation(); showResponse(btn.dataset.id); });
+    });
+
+  } catch(e) {
+    console.error(e);
+    if (!append) container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-3);">Failed to load posts.</p>';
   }
+}
 
-  // ---- Export PDF ----
-  async function exportToPDF() {
-    const element = document.getElementById('dashboardContent');
-    const loadingMsg = document.createElement('div');
-    loadingMsg.innerText = 'Generating PDF, please wait...';
-    loadingMsg.style.position = 'fixed'; loadingMsg.style.top = '50%'; loadingMsg.style.left = '50%'; loadingMsg.style.transform = 'translate(-50%,-50%)';
-    loadingMsg.style.background = 'var(--surface)'; loadingMsg.style.padding = '20px'; loadingMsg.style.borderRadius = '12px'; loadingMsg.style.zIndex = '1000';
-    document.body.appendChild(loadingMsg);
-    try {
-      const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#0E1217' });
-      const imgData = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('nc_dashboard.pdf');
-    } catch(err) { console.error(err); alert('Export failed'); }
-    finally { document.body.removeChild(loadingMsg); }
+// ── Response modal ─────────────────────────────────────────────
+async function showResponse(id) {
+  try {
+    const p = await get(`/posts/${id}`);
+    currentResp = { en:p.response_en||"No response generated yet.", af:p.response_af||"Afrikaans response pending.", tn:p.response_tn||"Setswana response pending.", xh:p.response_xh||"isiXhosa response pending." };
+    currentLang = "en";
+    document.getElementById("modalPreview").textContent = (p.en_translation||p.text||"").substring(0,180);
+    renderLangTabs();
+    document.getElementById("responseBody").textContent = currentResp.en;
+    document.getElementById("responseModal").classList.add("open");
+  } catch(e) { alert("Could not load response."); }
+}
+function renderLangTabs() {
+  const langs = [["en","English"],["af","Afrikaans"],["tn","Setswana"],["xh","isiXhosa"]];
+  document.getElementById("langTabs").innerHTML = langs.map(([code,label]) =>
+    `<button class="lang-tab ${code===currentLang?"active":""}" data-lang="${code}">${label}</button>`
+  ).join("");
+  document.querySelectorAll(".lang-tab").forEach(t => t.addEventListener("click", () => {
+    currentLang = t.dataset.lang;
+    renderLangTabs();
+    document.getElementById("responseBody").textContent = currentResp[currentLang];
+  }));
+}
+
+// ── NL Query ───────────────────────────────────────────────────
+async function runQuery() {
+  const q = document.getElementById("queryInput").value.trim();
+  if (!q) return;
+  const result = document.getElementById("queryResult");
+  result.innerHTML = '<div class="loading-cell" style="padding:24px;"><span class="spinner"></span> <span style="margin-left:8px;color:var(--text-3);">Analysing…</span></div>';
+  try {
+    const r = await post("/query", { question: q });
+    const sqlId = "sql_" + Date.now();
+    result.innerHTML = `
+      <div class="answer-block">
+        ${r.answer || "No answer returned."}
+        <div class="answer-meta">
+          <span>${r.row_count} row(s) returned</span>
+          <span>·</span>
+          <span>${r.query_type || "sql"} query</span>
+          ${r.sql_used ? `<button class="sql-toggle" onclick="
+            const b=document.getElementById('${sqlId}');
+            b.style.display=b.style.display==='block'?'none':'block';
+            this.textContent=b.style.display==='block'?'Hide SQL':'Show SQL';
+          ">Show SQL</button>` : ""}
+        </div>
+      </div>
+      ${r.sql_used ? `<div class="sql-block" id="${sqlId}">${r.sql_used}</div>` : ""}
+      ${r.rows && r.rows.length ? `
+        <div class="rows-table-wrap">
+          <table class="rows-table">
+            <thead><tr>${Object.keys(r.rows[0]).map(k=>`<th>${k.replace(/_/g," ")}</th>`).join("")}</tr></thead>
+            <tbody>${r.rows.map(row=>`<tr>${Object.values(row).map(v=>{
+              const s = v===null||v===undefined ? "—" : String(v);
+              return `<td>${s.length > 120 ? s.substring(0,120)+"…" : s}</td>`;
+            }).join("")}</tr>`).join("")}</tbody>
+          </table>
+        </div>
+      ` : ""}
+    `;
+  } catch(e) {
+    result.innerHTML = `<div class="answer-block" style="border-color:var(--red);">Error: ${e.message}</div>`;
   }
+}
 
-  // ---- Suggestions and live polling ----
-  const suggestions = [
-    "What are people in Namakwa saying about water?",
-    "Show me urgent complaints about electricity",
-    "What issues affect Frances Baard?",
-    "Are there any escalated posts about health?"
-  ];
-  document.getElementById('suggestions').innerHTML = suggestions.map(s => `<span class="suggestion-chip" onclick="document.getElementById('queryInput').value='${s}'; runQuery();">${s}</span>`).join('');
+// ── Suggestions ────────────────────────────────────────────────
+async function loadSuggestions() {
+  try {
+    const r = await get("/query/suggestions");
+    document.getElementById("suggestionChips").innerHTML =
+      (r.suggestions || []).slice(0,6).map(s =>
+        `<button class="chip" onclick="document.getElementById('queryInput').value=this.textContent;runQuery();">${s}</button>`
+      ).join("");
+  } catch {
+    const defaults = [
+      "What are people saying about water in Upington?",
+      "Show me the most urgent posts from Kimberley",
+      "Which district has the most complaints this week?",
+      "Show all escalated electricity posts",
+    ];
+    document.getElementById("suggestionChips").innerHTML = defaults.map(s =>
+      `<button class="chip" onclick="document.getElementById('queryInput').value=this.textContent;runQuery();">${s}</button>`
+    ).join("");
+  }
+}
 
-  document.getElementById('queryBtn').addEventListener('click', runQuery);
-  document.getElementById('queryInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') runQuery(); });
-  document.getElementById('loadMoreBtn').addEventListener('click', () => {
-    const nextPage = Math.floor(loadedPostsCount / LIMIT);
-    loadPosts(nextPage, true);
+// ── Filter pills ───────────────────────────────────────────────
+document.querySelectorAll(".filter-pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    currentPage  = 1;
+    loadedCount  = 0;
+    loadPosts(1, false);
   });
-  document.querySelector('.close-modal').addEventListener('click', () => document.getElementById('responseModal').style.display = 'none');
-  document.getElementById('copyResponseBtn').addEventListener('click', () => {
-    navigator.clipboard.writeText(document.getElementById('modalResponseText').innerText);
-    alert('Copied to clipboard');
-  });
-  window.onclick = (e) => { if(e.target === document.getElementById('responseModal')) document.getElementById('responseModal').style.display = 'none'; };
-  document.getElementById('exportBtn').addEventListener('click', exportToPDF);
+});
 
-  // Start polling every 30 seconds
-  setInterval(() => loadGlobalStats(), 30000);
+// ── Bindings ───────────────────────────────────────────────────
+document.getElementById("queryBtn").addEventListener("click", runQuery);
+document.getElementById("queryInput").addEventListener("keydown", e => { if(e.key==="Enter") runQuery(); });
+document.getElementById("loadMoreBtn").addEventListener("click", () => {
+  currentPage++;
+  loadPosts(currentPage, true);
+});
+document.getElementById("closeModal").addEventListener("click", () => document.getElementById("responseModal").classList.remove("open"));
+document.getElementById("responseModal").addEventListener("click", e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove("open"); });
+document.getElementById("copyBtn").addEventListener("click", () => {
+  navigator.clipboard.writeText(document.getElementById("responseBody").textContent);
+  const btn = document.getElementById("copyBtn");
+  btn.textContent = "Copied!";
+  setTimeout(() => btn.textContent = "Copy Response", 2000);
+});
+document.getElementById("exportBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("exportBtn");
+  btn.textContent = "Generating…";
+  try {
+    const canvas = await html2canvas(document.getElementById("dashboardContent"), { scale:1.5, backgroundColor:"#F0F4F1" });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p","mm","a4");
+    const w = pdf.internal.pageSize.getWidth();
+    pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,w,(canvas.height*w)/canvas.width);
+    pdf.save(`Echo_nc_${new Date().toISOString().split("T")[0]}.pdf`);
+  } catch(e) { alert("Export failed: "+e.message); }
+  btn.textContent = "↓ Export PDF";
+});
 
-  // Initial load
-  initMap();
-  loadGlobalStats();
-  loadPosts(0, false);
+// ── Auto-refresh every 2 minutes ──────────────────────────────
+setInterval(() => { loadStats(); loadTrend(); }, 120000);
+
+// ── Boot ───────────────────────────────────────────────────────
+initMap();
+loadStats();
+loadTrend();
+loadPostDerivedStats();
+loadSuggestions();
+loadPosts(1, false);
 </script>
 </body>
 </html>
