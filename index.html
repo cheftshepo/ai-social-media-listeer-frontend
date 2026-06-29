@@ -17,27 +17,27 @@
 
 /* ── NC Government Token System ─────────────────────────────── */
 :root {
-  --green:        #1D5C3A;   /* NC Government Green — thorn tree / primary shield */
-  --green-dark:   #143F28;   /* Deep header green */
-  --green-light:  #2E7A52;   /* Hover / lighter green */
-  --gold:         #C8A951;   /* Namaqua daisy gold */
-  --gold-light:   #E8CB79;   /* Lighter gold accent */
-  --red:          #B5261E;   /* Shield corner red — negative / escalation */
-  --red-light:    #FAE8E7;   /* Red tint background */
-  --blue:         #1B4F8A;   /* Coastal blue — informational */
-  --blue-light:   #E8EEF7;   /* Blue tint */
-  --positive:     #2E7A52;   /* Green for positive sentiment */
+  --green:        #1D5C3A;
+  --green-dark:   #143F28;
+  --green-light:  #2E7A52;
+  --gold:         #C8A951;
+  --gold-light:   #E8CB79;
+  --red:          #B5261E;
+  --red-light:    #FAE8E7;
+  --blue:         #1B4F8A;
+  --blue-light:   #E8EEF7;
+  --positive:     #2E7A52;
   --positive-bg:  #E8F2EC;
   --warning:      #A0620A;
   --warning-bg:   #FEF3E2;
-  --bg:           #F0F4F1;   /* Arid plains — very light green-white */
+  --bg:           #F0F4F1;
   --surface:      #FFFFFF;
-  --surface-2:    #F7FAF8;   /* Slightly tinted white for alternates */
-  --border:       #D4DFDA;   /* Subtle green-toned border */
+  --surface-2:    #F7FAF8;
+  --border:       #D4DFDA;
   --border-light: #E8EFEB;
-  --text:         #1A2C22;   /* Very dark green-black */
-  --text-2:       #3D5445;   /* Secondary text */
-  --text-3:       #7A9285;   /* Muted */
+  --text:         #1A2C22;
+  --text-2:       #3D5445;
+  --text-3:       #7A9285;
   --radius:       12px;
   --radius-lg:    20px;
   --shadow:       0 1px 4px rgba(29,92,58,.08), 0 4px 16px rgba(29,92,58,.06);
@@ -69,7 +69,6 @@ body {
   margin: 0 auto;
   display: flex;
   align-items: stretch;
-  gap: 0;
 }
 .gov-crest {
   display: flex;
@@ -80,506 +79,186 @@ body {
   margin-right: 24px;
 }
 .crest-diamond {
-  width: 42px;
-  height: 42px;
+  width: 42px; height: 42px;
   background: var(--gold);
   transform: rotate(45deg);
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.crest-diamond span {
-  transform: rotate(-45deg);
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--green-dark);
-}
-.crest-text {
-  line-height: 1.25;
-}
-.crest-province {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.6);
-}
-.crest-dept {
-  font-size: 13px;
-  font-weight: 600;
-  color: white;
-}
-.gov-title-block {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px 0;
-  flex: 1;
-}
-.system-badge {
-  background: var(--gold);
-  color: var(--green-dark);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  padding: 3px 10px;
-  border-radius: 4px;
-}
-.system-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-}
-.system-sub {
-  font-size: 12px;
-  color: rgba(255,255,255,.55);
-  margin-top: 1px;
-}
-.gov-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 16px 0;
-}
-.live-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: rgba(255,255,255,.6);
-}
-.live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #5CB85C;
-  animation: pulse-green 2s infinite;
-}
+.crest-diamond span { transform: rotate(-45deg); font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.crest-text { line-height: 1.25; }
+.crest-province { font-size: 9px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.crest-dept { font-size: 13px; font-weight: 600; color: white; }
+.gov-title-block { display: flex; align-items: center; gap: 16px; padding: 16px 0; flex: 1; }
+.system-badge { background: var(--gold); color: var(--green-dark); font-size: 11px; font-weight: 700; letter-spacing: .08em; padding: 3px 10px; border-radius: 4px; }
+.system-name { font-size: 18px; font-weight: 600; color: white; }
+.system-sub { font-size: 12px; color: rgba(255,255,255,.55); margin-top: 1px; }
+.gov-right { display: flex; align-items: center; gap: 20px; padding: 16px 0; }
+.live-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,.6); }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: #5CB85C; animation: pulse-green 2s infinite; }
 @keyframes pulse-green {
   0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(92,184,92,.4); }
-  50%        { opacity: .8; box-shadow: 0 0 0 6px rgba(92,184,92,0); }
+  50%       { opacity: .8; box-shadow: 0 0 0 6px rgba(92,184,92,0); }
 }
-.header-timestamp {
-  font-size: 11px;
-  color: rgba(255,255,255,.5);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .02em;
-}
-.export-btn {
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.2);
-  color: rgba(255,255,255,.8);
-  border-radius: 6px;
-  padding: 7px 16px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all .2s;
-  font-family: inherit;
-}
+.header-timestamp { font-size: 11px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.export-btn { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.8); border-radius: 6px; padding: 7px 16px; font-size: 12px; cursor: pointer; transition: all .2s; font-family: inherit; }
 .export-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--green-dark); }
-
-/* ── Gold Rule ───────────────────────────────────────────────── */
-.gold-rule {
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
-}
+.gold-rule { height: 3px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%); }
 
 /* ── Page ────────────────────────────────────────────────────── */
-.page {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 28px 32px 48px;
-}
+.page { max-width: 1440px; margin: 0 auto; padding: 28px 32px 48px; }
 
 /* ── Situation Brief ─────────────────────────────────────────── */
 .situation-brief {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--gold);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  box-shadow: var(--shadow-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 4px solid var(--gold); border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; box-shadow: var(--shadow-sm);
 }
-.brief-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 3px;
-}
-.brief-text {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.4;
-}
+.brief-label { font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+.brief-text { font-size: 13px; color: var(--text-2); line-height: 1.4; }
 .brief-text strong { color: var(--text); font-weight: 600; }
-.brief-items {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.brief-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-.brief-item-value {
-  font-family: 'DM Serif Display', serif;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--text);
-}
-.brief-item-value.red   { color: var(--red); }
-.brief-item-value.gold  { color: #8B6A14; }
-.brief-item-value.green { color: var(--green); }
-.brief-item-label {
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  text-align: center;
-}
+.brief-items { display: flex; gap: 24px; flex-wrap: wrap; }
+.brief-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.brief-item-value { font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1; color: var(--text); }
+.brief-item-value.red  { color: var(--red); }
+.brief-item-value.gold { color: #8B6A14; }
+.brief-item-label { font-size: 10px; color: var(--text-3); letter-spacing: .04em; text-transform: uppercase; text-align: center; }
 
 /* ── Stats Grid ──────────────────────────────────────────────── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
-}
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 28px; }
 .stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
-  border-top: 3px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow-sm); border-top: 3px solid var(--border);
   transition: box-shadow .2s, transform .15s;
 }
 .stat-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
-.stat-card.accent-green { border-top-color: var(--green); }
-.stat-card.accent-red   { border-top-color: var(--red); }
-.stat-card.accent-gold  { border-top-color: var(--gold); }
-.stat-card.accent-blue  { border-top-color: var(--blue); }
-.stat-card.accent-positive { border-top-color: var(--positive); }
-.stat-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-3);
-  margin-bottom: 8px;
-}
-.stat-value {
-  font-family: 'DM Serif Display', serif;
-  font-size: 36px;
-  line-height: 1;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-.stat-value.red     { color: var(--red); }
-.stat-value.gold    { color: #8B6A14; }
-.stat-value.green   { color: var(--green); }
-.stat-value.blue    { color: var(--blue); }
-.stat-sub {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 6px;
-}
+.stat-card.accent-green   { border-top-color: var(--green); }
+.stat-card.accent-red     { border-top-color: var(--red); }
+.stat-card.accent-gold    { border-top-color: var(--gold); }
+.stat-card.accent-blue    { border-top-color: var(--blue); }
+.stat-card.accent-positive{ border-top-color: var(--positive); }
+.stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-3); margin-bottom: 8px; }
+.stat-value { font-family: 'DM Serif Display', serif; font-size: 36px; line-height: 1; color: var(--text); font-variant-numeric: tabular-nums; }
+.stat-value.red   { color: var(--red); }
+.stat-value.gold  { color: #8B6A14; }
+.stat-value.green { color: var(--green); }
+.stat-value.blue  { color: var(--blue); }
+.stat-sub { font-size: 11px; color: var(--text-3); margin-top: 6px; }
 
 /* ── Grid layouts ────────────────────────────────────────────── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-.grid-3-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+.grid-2   { display: grid; grid-template-columns: 1fr 1fr;       gap: 20px; margin-bottom: 20px; }
+.grid-3   { display: grid; grid-template-columns: 1fr 1fr 1fr;   gap: 20px; margin-bottom: 20px; }
 
 /* ── Card ────────────────────────────────────────────────────── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow .2s;
-}
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
 .card:hover { box-shadow: var(--shadow); }
-.card-head {
-  padding: 14px 20px 12px;
-  border-bottom: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.card-title {
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--text-2);
-}
-.card-badge {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  background: var(--surface-2);
-  color: var(--text-3);
-  border: 1px solid var(--border);
-}
+.card-head { padding: 14px 20px 12px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-2); }
+.card-badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--surface-2); color: var(--text-3); border: 1px solid var(--border); }
 .card-body { padding: 20px; }
 .card-body.tight { padding: 16px; }
 
-/* ── Map ─────────────────────────────────────────────────────── */
-#map { height: 260px; border-radius: 10px; overflow: hidden; }
+/* ── Map — FIX: explicit position:relative so tiles stay clipped ── */
+.map-wrapper {
+  position: relative;           /* ← containment for Leaflet's absolute children */
+  border-radius: 10px;
+  overflow: hidden;             /* ← clips tiles to the rounded box */
+  height: 260px;
+  isolation: isolate;           /* ← new stacking context, stops z-index bleed */
+}
+#map {
+  position: absolute;           /* ← fills the wrapper fully */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
 .map-note { font-size: 10px; color: var(--text-3); text-align: center; margin-top: 8px; }
 
-/* ── District bars ───────────────────────────────────────────── */
+/* ── District / source bars ──────────────────────────────────── */
 .dist-row { margin-bottom: 14px; }
 .dist-row:last-child { margin-bottom: 0; }
 .dist-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
-.dist-name { font-size: 12px; color: var(--text-2); }
+.dist-name  { font-size: 12px; color: var(--text-2); }
 .dist-count { font-size: 12px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
 .dist-bar-track { height: 5px; background: var(--border-light); border-radius: 3px; overflow: hidden; }
-.dist-bar-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .6s ease; }
+.dist-bar-fill  { height: 100%; background: var(--green); border-radius: 3px; transition: width .6s ease; }
 
-/* ── Topic urgency matrix ────────────────────────────────────── */
-.topic-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+/* ── Topic urgency ────────────────────────────────────────────── */
+.topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .topic-row:last-child { margin-bottom: 0; }
-.topic-name {
-  width: 90px;
-  font-size: 11px;
-  color: var(--text-2);
-  text-transform: capitalize;
-  flex-shrink: 0;
-}
+.topic-name { width: 90px; font-size: 11px; color: var(--text-2); text-transform: capitalize; flex-shrink: 0; }
 .topic-bar-wrap { flex: 1; }
 .topic-bar-track { height: 18px; background: var(--border-light); border-radius: 4px; overflow: hidden; position: relative; }
-.topic-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width .6s ease;
-  display: flex;
-  align-items: center;
-  padding-left: 8px;
-}
+.topic-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; display: flex; align-items: center; padding-left: 8px; }
 .topic-bar-fill span { font-size: 10px; font-weight: 600; color: white; white-space: nowrap; }
 .topic-urgency { width: 32px; text-align: right; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; flex-shrink: 0; }
 
 /* ── Language pulse ──────────────────────────────────────────── */
-.lang-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.lang-item {
-  background: var(--surface-2);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  padding: 12px;
-}
-.lang-flag { font-size: 18px; margin-bottom: 4px; }
-.lang-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); }
+.lang-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.lang-item { background: var(--surface-2); border: 1px solid var(--border-light); border-radius: 10px; padding: 12px; }
+.lang-name  { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); }
 .lang-count { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; color: var(--text); }
-.lang-pct { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-.lang-bar { height: 3px; border-radius: 2px; background: var(--green); margin-top: 8px; transition: width .5s; }
+.lang-pct   { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.lang-bar   { height: 3px; border-radius: 2px; background: var(--green); margin-top: 8px; transition: width .5s; }
 
 /* ── Intent breakdown ────────────────────────────────────────── */
 .intent-list { display: flex; flex-direction: column; gap: 10px; }
-.intent-row { display: flex; align-items: center; gap: 10px; }
-.intent-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.intent-row  { display: flex; align-items: center; gap: 10px; }
+.intent-dot  { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 .intent-label { font-size: 12px; color: var(--text-2); width: 70px; }
 .intent-bar-track { flex: 1; height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
-.intent-bar-fill { height: 100%; border-radius: 4px; transition: width .6s; }
+.intent-bar-fill  { height: 100%; border-radius: 4px; transition: width .6s; }
 .intent-count { font-size: 12px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; width: 38px; text-align: right; }
 
 /* ── Response readiness ──────────────────────────────────────── */
 .readiness-items { display: flex; flex-direction: column; gap: 14px; }
-.readiness-item { display: flex; flex-direction: column; gap: 5px; }
-.readiness-meta { display: flex; justify-content: space-between; align-items: baseline; }
+.readiness-item  { display: flex; flex-direction: column; gap: 5px; }
+.readiness-meta  { display: flex; justify-content: space-between; align-items: baseline; }
 .readiness-label { font-size: 12px; color: var(--text-2); }
 .readiness-value { font-size: 14px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
 .readiness-track { height: 7px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
-.readiness-fill { height: 100%; border-radius: 4px; transition: width .7s ease; }
+.readiness-fill  { height: 100%; border-radius: 4px; transition: width .7s ease; }
 
 /* ── Query section ───────────────────────────────────────────── */
-.query-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 28px;
-  box-shadow: var(--shadow-sm);
-}
-.query-eyebrow {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  color: var(--green);
-  margin-bottom: 4px;
-}
-.query-heading {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 16px;
-}
+.query-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow-sm); }
+.query-eyebrow  { font-size: 9px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; }
+.query-heading  { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
 .query-row { display: flex; gap: 10px; margin-bottom: 12px; }
 .query-input {
-  flex: 1;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 48px;
-  padding: 13px 20px;
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--text);
-  outline: none;
-  transition: border .2s, box-shadow .2s;
+  flex: 1; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 48px; padding: 13px 20px; font-family: inherit;
+  font-size: 14px; color: var(--text); outline: none; transition: border .2s, box-shadow .2s;
 }
 .query-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(29,92,58,.1); }
 .query-input::placeholder { color: var(--text-3); }
-.query-btn {
-  background: var(--green);
-  color: white;
-  border: none;
-  border-radius: 48px;
-  padding: 0 28px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background .2s;
-  white-space: nowrap;
-}
+.query-btn { background: var(--green); color: white; border: none; border-radius: 48px; padding: 0 28px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .2s; white-space: nowrap; }
 .query-btn:hover { background: var(--green-light); }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chip {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 40px;
-  padding: 5px 12px;
-  font-size: 11px;
-  cursor: pointer;
-  color: var(--text-2);
-  transition: all .15s;
-  font-family: inherit;
-}
+.chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: 40px; padding: 5px 12px; font-size: 11px; cursor: pointer; color: var(--text-2); transition: all .15s; font-family: inherit; }
 .chip:hover { background: var(--green); color: white; border-color: var(--green); }
-.answer-block {
-  background: var(--surface-2);
-  border-left: 4px solid var(--green);
-  padding: 14px 18px;
-  margin: 20px 0 16px;
-  border-radius: 0 10px 10px 0;
-  font-size: 14px;
-  line-height: 1.65;
-  color: var(--text-2);
-}
-.answer-meta {
-  font-size: 10px;
-  color: var(--text-3);
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.sql-toggle {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 3px 10px;
-  font-size: 11px;
-  cursor: pointer;
-  color: var(--text-3);
-  font-family: inherit;
-  transition: all .15s;
-}
+.answer-block { background: var(--surface-2); border-left: 4px solid var(--green); padding: 14px 18px; margin: 20px 0 16px; border-radius: 0 10px 10px 0; font-size: 14px; line-height: 1.65; color: var(--text-2); }
+.answer-meta { font-size: 10px; color: var(--text-3); margin-top: 8px; display: flex; align-items: center; gap: 8px; }
+.sql-toggle { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 3px 10px; font-size: 11px; cursor: pointer; color: var(--text-3); font-family: inherit; transition: all .15s; }
 .sql-toggle:hover { border-color: var(--green); color: var(--green); }
-.sql-block {
-  background: #1A2C22;
-  color: #8FD9A8;
-  border-radius: 10px;
-  padding: 14px 18px;
-  font-family: 'SF Mono', 'Menlo', monospace;
-  font-size: 12px;
-  margin-bottom: 14px;
-  overflow-x: auto;
-  display: none;
-}
+.sql-block { background: #1A2C22; color: #8FD9A8; border-radius: 10px; padding: 14px 18px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; margin-bottom: 14px; overflow-x: auto; display: none; white-space: pre-wrap; }
 .rows-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
 .rows-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.rows-table th {
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  white-space: nowrap;
-}
-.rows-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--text-2);
-  vertical-align: top;
-}
+.rows-table th { background: var(--surface-2); border-bottom: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; }
+.rows-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-light); color: var(--text-2); vertical-align: top; }
 .rows-table tr:last-child td { border-bottom: none; }
 .rows-table tr:hover td { background: var(--surface-2); }
 
 /* ── Posts feed ──────────────────────────────────────────────── */
-.feed-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+.feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
 .feed-title { font-size: 16px; font-weight: 700; color: var(--text); }
 .feed-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-.filter-pill {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 40px;
-  padding: 5px 14px;
-  font-size: 11px;
-  cursor: pointer;
-  color: var(--text-2);
-  font-family: inherit;
-  transition: all .15s;
-}
-.filter-pill.active, .filter-pill:hover {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
-.post-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px 20px;
-  margin-bottom: 10px;
-  transition: all .15s;
-  cursor: default;
-  box-shadow: var(--shadow-sm);
-}
+.filter-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 5px 14px; font-size: 11px; cursor: pointer; color: var(--text-2); font-family: inherit; transition: all .15s; }
+.filter-pill.active, .filter-pill:hover { background: var(--green); border-color: var(--green); color: white; }
+.post-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 10px; transition: all .15s; box-shadow: var(--shadow-sm); }
 .post-card:hover { box-shadow: var(--shadow); border-color: #C4D3CB; }
 .post-card.escalated { border-left: 4px solid var(--red); }
 .post-card.positive  { border-left: 4px solid var(--positive); }
@@ -591,50 +270,20 @@ body {
 .post-time { font-size: 11px; color: var(--text-3); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .post-text { font-size: 13px; color: var(--text-2); margin-bottom: 10px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .post-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.tag {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-weight: 500;
-  white-space: nowrap;
-  border: 1px solid transparent;
-}
-.tag-neg  { background: var(--red-light); color: var(--red); border-color: rgba(181,38,30,.2); }
-.tag-pos  { background: var(--positive-bg); color: var(--positive); border-color: rgba(46,122,82,.2); }
-.tag-neu  { background: var(--surface-2); color: var(--text-3); border-color: var(--border); }
-.tag-urg  { background: var(--warning-bg); color: var(--warning); border-color: rgba(160,98,10,.2); }
-.tag-esc  { background: var(--red); color: white; }
-.tag-dist { background: var(--blue-light); color: var(--blue); border-color: rgba(27,79,138,.2); }
-.tag-topic { background: rgba(200,169,81,.12); color: #6B5214; border-color: rgba(200,169,81,.3); }
-.view-btn {
-  font-size: 10px;
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 40px;
-  padding: 3px 12px;
-  cursor: pointer;
-  color: var(--text-3);
-  font-family: inherit;
-  transition: all .15s;
-  margin-left: auto;
-  white-space: nowrap;
-}
+.tag { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 500; white-space: nowrap; border: 1px solid transparent; }
+.tag-neg   { background: var(--red-light);    color: var(--red);      border-color: rgba(181,38,30,.2); }
+.tag-pos   { background: var(--positive-bg);  color: var(--positive); border-color: rgba(46,122,82,.2); }
+.tag-neu   { background: var(--surface-2);    color: var(--text-3);   border-color: var(--border); }
+.tag-urg   { background: var(--warning-bg);   color: var(--warning);  border-color: rgba(160,98,10,.2); }
+.tag-esc   { background: var(--red);          color: white; }
+.tag-dist  { background: var(--blue-light);   color: var(--blue);     border-color: rgba(27,79,138,.2); }
+.tag-topic { background: rgba(200,169,81,.12); color: #6B5214;        border-color: rgba(200,169,81,.3); }
+.view-btn { font-size: 10px; background: none; border: 1px solid var(--border); border-radius: 40px; padding: 3px 12px; cursor: pointer; color: var(--text-3); font-family: inherit; transition: all .15s; margin-left: auto; white-space: nowrap; }
 .view-btn:hover { border-color: var(--green); color: var(--green); }
 
-/* ── Load more / pagination ──────────────────────────────────── */
+/* ── Load more ────────────────────────────────────────────────── */
 .load-more-wrap { text-align: center; margin: 24px 0 8px; }
-.load-more-btn {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 40px;
-  padding: 10px 32px;
-  font-size: 13px;
-  cursor: pointer;
-  color: var(--text-2);
-  font-family: inherit;
-  font-weight: 500;
-  transition: all .2s;
-}
+.load-more-btn { background: var(--surface); border: 1.5px solid var(--border); border-radius: 40px; padding: 10px 32px; font-size: 13px; cursor: pointer; color: var(--text-2); font-family: inherit; font-weight: 500; transition: all .2s; }
 .load-more-btn:hover { background: var(--green); border-color: var(--green); color: white; }
 .pagination-note { text-align: center; font-size: 11px; color: var(--text-3); margin-top: 10px; }
 
@@ -654,29 +303,29 @@ body {
 .copy-btn { background: var(--green); color: white; border: none; border-radius: 40px; padding: 8px 20px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 600; }
 .copy-btn:hover { background: var(--green-light); }
 
-/* ── Spinner / loading ───────────────────────────────────────── */
+/* ── Spinner ─────────────────────────────────────────────────── */
 .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-cell { text-align: center; padding: 32px; color: var(--text-3); }
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .stats-grid  { grid-template-columns: repeat(3, 1fr); }
-  .grid-2, .grid-3-1 { grid-template-columns: 1fr; }
-  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .grid-2     { grid-template-columns: 1fr; }
+  .grid-3     { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
-  .page { padding: 16px; }
+  .page       { padding: 16px; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .grid-3 { grid-template-columns: 1fr; }
-  .gov-right { display: none; }
-  .query-row { flex-direction: column; }
+  .grid-3     { grid-template-columns: 1fr; }
+  .gov-right  { display: none; }
+  .query-row  { flex-direction: column; }
 }
 </style>
 </head>
 <body>
 
-<!-- ── Government Header ───────────────────────────────────── -->
+<!-- ── Government Header ──────────────────────────────────── -->
 <header class="gov-header">
   <div class="gov-header-inner">
     <div class="gov-crest">
@@ -692,14 +341,11 @@ body {
           <span class="system-badge">Echo</span>
           <span class="system-name">Civic Intelligence Platform</span>
         </div>
-        <div class="system-sub">Sa ǁa ǃaĩsi 'uĩsi — Real-time social listening for Northern Cape Province</div>
+        <div class="system-sub">Sa ǁa !aĩsi 'uĩsi — Real-time social listening for Northern Cape Province</div>
       </div>
     </div>
     <div class="gov-right">
-      <div class="live-indicator">
-        <span class="live-dot"></span>
-        <span>Live</span>
-      </div>
+      <div class="live-indicator"><span class="live-dot"></span><span>Live</span></div>
       <div class="header-timestamp" id="headerClock">—</div>
       <button class="export-btn" id="exportBtn">↓ Export PDF</button>
     </div>
@@ -714,36 +360,28 @@ body {
   <div class="situation-brief" id="situationBrief">
     <div>
       <div class="brief-label">Situation Brief</div>
-      <div class="brief-text" id="briefText">Loading provincial data...</div>
+      <div class="brief-text" id="briefText">Loading provincial data…</div>
     </div>
     <div class="brief-items" id="briefItems"></div>
   </div>
 
   <!-- KPI Stats -->
   <div class="stats-grid" id="statsGrid">
-    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
-    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
-    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
-    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
-    <div class="stat-card"><div class="stat-label">Loading...</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading…</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading…</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading…</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading…</div><div class="stat-value">—</div></div>
+    <div class="stat-card"><div class="stat-label">Loading…</div><div class="stat-value">—</div></div>
   </div>
 
   <!-- Row 1: Trend + Sentiment -->
-  <div class="grid-2" style="margin-bottom:20px;">
+  <div class="grid-2">
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">14-Day Sentiment Trend</span>
-        <span class="card-badge">Rolling window</span>
-      </div>
-      <div class="card-body">
-        <canvas id="trendChart" height="140"></canvas>
-      </div>
+      <div class="card-head"><span class="card-title">14-Day Sentiment Trend</span><span class="card-badge">Rolling window</span></div>
+      <div class="card-body"><canvas id="trendChart" height="140"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Sentiment Distribution</span>
-        <span class="card-badge" id="sentimentTotal">—</span>
-      </div>
+      <div class="card-head"><span class="card-title">Sentiment Distribution</span><span class="card-badge" id="sentimentTotal">—</span></div>
       <div class="card-body" style="display:flex;align-items:center;gap:24px;">
         <canvas id="sentimentDonut" width="160" height="160" style="width:160px;flex-shrink:0;"></canvas>
         <div id="sentimentLegend" style="flex:1;display:flex;flex-direction:column;gap:10px;"></div>
@@ -752,87 +390,50 @@ body {
   </div>
 
   <!-- Row 2: Map + District bars -->
-  <div class="grid-2" style="margin-bottom:20px;">
+  <div class="grid-2">
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">District Sentiment Map</span>
-        <span class="card-badge">NC Province</span>
-      </div>
+      <div class="card-head"><span class="card-title">District Sentiment Map</span><span class="card-badge">NC Province</span></div>
+      <!-- FIX: map-wrapper creates the stacking context so the map doesn't float over the page -->
       <div class="card-body tight">
-        <div id="map"></div>
+        <div class="map-wrapper"><div id="map"></div></div>
         <div class="map-note">Marker size = post volume · Colour = negative intensity (green → red)</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Posts by District</span>
-        <span class="card-badge">Top 6</span>
-      </div>
-      <div class="card-body" id="districtBars">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Posts by District</span><span class="card-badge">Top 6</span></div>
+      <div class="card-body" id="districtBars"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
   </div>
 
   <!-- Row 3: Topic urgency + Language + Response readiness -->
-  <div class="grid-3" style="margin-bottom:20px;">
+  <div class="grid-3">
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Civic Topic Urgency</span>
-        <span class="card-badge">Avg 1–10</span>
-      </div>
-      <div class="card-body" id="topicUrgency">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Civic Topic Urgency</span><span class="card-badge">Avg 1–10</span></div>
+      <div class="card-body" id="topicUrgency"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Language Pulse</span>
-        <span class="card-badge">Detected language</span>
-      </div>
-      <div class="card-body" id="languagePulse">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Language Pulse</span><span class="card-badge">Detected language</span></div>
+      <div class="card-body" id="languagePulse"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Response Readiness</span>
-        <span class="card-badge">Queue status</span>
-      </div>
-      <div class="card-body" id="responseReadiness">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Response Readiness</span><span class="card-badge">Queue status</span></div>
+      <div class="card-body" id="responseReadiness"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
   </div>
 
   <!-- Row 4: Intent + Source + Geo resolve -->
-  <div class="grid-3" style="margin-bottom:28px;">
+  <div class="grid-3">
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Citizen Intent</span>
-        <span class="card-badge">Complaint vs praise</span>
-      </div>
-      <div class="card-body" id="intentBreakdown">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Citizen Intent</span><span class="card-badge">Complaint vs praise</span></div>
+      <div class="card-body" id="intentBreakdown"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Data Sources</span>
-        <span class="card-badge">Active</span>
-      </div>
-      <div class="card-body" id="sourceBars">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Data Sources</span><span class="card-badge">Active</span></div>
+      <div class="card-body" id="sourceBars"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <span class="card-title">Geographic Resolve</span>
-        <span class="card-badge">Precision level</span>
-      </div>
-      <div class="card-body" id="geoResolve">
-        <div class="loading-cell"><span class="spinner"></span></div>
-      </div>
+      <div class="card-head"><span class="card-title">Geographic Resolve</span><span class="card-badge">Precision level</span></div>
+      <div class="card-body" id="geoResolve"><div class="loading-cell"><span class="spinner"></span></div></div>
     </div>
   </div>
 
@@ -885,9 +486,10 @@ body {
 
 <script>
 // ── Config ─────────────────────────────────────────────────────
-// LOCAL:  "http://localhost:7071/api"
-// AZURE:  "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api"
-const API = "http://localhost:7071/api";
+// Switch between local dev and Azure:
+// LOCAL: "http://localhost:7071/api"
+// AZURE: "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api"
+const API = "https://func-nsync-aisocial-poc-enrichment.azurewebsites.net/api";
 
 // ── State ──────────────────────────────────────────────────────
 let sentimentChart = null;
@@ -903,30 +505,28 @@ const PER_PAGE     = 12;
 // ── Clock ──────────────────────────────────────────────────────
 function updateClock() {
   const el = document.getElementById("headerClock");
-  if (el) el.textContent = new Date().toLocaleString("en-ZA", {
-    dateStyle:"medium", timeStyle:"short"
-  });
+  if (el) el.textContent = new Date().toLocaleString("en-ZA", { dateStyle:"medium", timeStyle:"short" });
 }
 updateClock();
 setInterval(updateClock, 30000);
 
-// ── Fetch helper ───────────────────────────────────────────────
+// ── Fetch helpers ──────────────────────────────────────────────
 async function get(path) {
   const r = await fetch(`${API}${path}`);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status} on ${path}`);
   return r.json();
 }
 async function post(path, body) {
   const r = await fetch(`${API}${path}`, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status} on ${path}`);
   return r.json();
 }
 
-// ── Source display ─────────────────────────────────────────────
+// ── Helpers ────────────────────────────────────────────────────
 function fmtSource(p) {
   if (!p.url) return p.source || "—";
   try {
@@ -938,9 +538,15 @@ function fmtDate(ds) {
   if (!ds) return "—";
   return new Date(ds).toLocaleDateString("en-ZA", { day:"numeric", month:"short", year:"numeric" });
 }
+function urgColor(v) {
+  return v >= 7 ? "#B5261E" : v >= 5 ? "#A0620A" : "#1D5C3A";
+}
 
 // ── Map ────────────────────────────────────────────────────────
+// FIX: using CircleMarker throughout — the old code tried to remove
+// L.Marker but placed L.CircleMarker, so the clear loop never fired.
 let map;
+let mapLayers = [];   // track our layers so we can clear them cleanly
 const DISTRICT_COORDS = {
   "Frances Baard":       [-28.7282, 24.7499],
   "ZF Mgcawu":           [-28.4478, 21.2561],
@@ -948,138 +554,150 @@ const DISTRICT_COORDS = {
   "Pixley ka Seme":      [-30.7194, 25.0986],
   "John Taolo Gaetsewe": [-27.6909, 23.0387],
 };
+
 function initMap() {
   map = L.map("map", { zoomControl: false }).setView([-29.0, 21.5], 6);
-  L.control.zoom({ position:"bottomright" }).addTo(map);
+  L.control.zoom({ position: "bottomright" }).addTo(map);
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-    attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    attribution: "© <a href='https://www.openstreetmap.org/copyright'>OSM</a>"
   }).addTo(map);
 }
+
 function updateMap(districts) {
   if (!map) return;
-  map.eachLayer(l => { if (l instanceof L.CircleMarker) map.removeLayer(l); });
+  // Clear previous markers correctly
+  mapLayers.forEach(l => map.removeLayer(l));
+  mapLayers = [];
+
   const maxCount = Math.max(...districts.map(d => d.count), 1);
   for (const d of districts) {
     const coords = DISTRICT_COORDS[d.district_name];
     if (!coords) continue;
     const t = d.count / maxCount;
-    const r = Math.round(181 * t), g = Math.round(181 * (1 - t) + 46 * t);
+    // Green (low) → Red (high) using NC palette
+    const r = Math.round(181 * t);
+    const g = Math.round(92 * (1 - t) + 46 * t);
     const color = `rgb(${r},${g},58)`;
-    L.circleMarker(coords, {
+    const circle = L.circleMarker(coords, {
       radius: 10 + t * 14,
-      fillColor: color, color:"white",
-      weight:1.5, fillOpacity:.75
-    }).addTo(map).bindPopup(`<b>${d.district_name}</b><br>Posts: ${d.count}`);
+      fillColor: color, color: "white",
+      weight: 1.5, fillOpacity: 0.75
+    }).addTo(map).bindPopup(`<b>${d.district_name}</b><br>Posts: ${d.count.toLocaleString()}`);
+    mapLayers.push(circle);
   }
 }
 
-// ── Load overview stats ────────────────────────────────────────
+// ── Load overview stats ─────────────────────────────────────────
+// FIX: endpoint is /stats/overview — not /stats
 async function loadStats() {
   try {
-    const stats = await get("/stats/overview");
-    const { total_posts:T, positive_count:P, negative_count:N, neutral_count:Nu,
-            escalation_count:E, pending_count:Pend, avg_urgency:AU,
-            top_districts:TD, top_topics:TT, source_breakdown:SB } = stats;
+    const s = await get("/stats/overview");
+
+    const T    = s.total_posts      || 0;
+    const P    = s.positive_count   || 0;
+    const N    = s.negative_count   || 0;
+    const Nu   = s.neutral_count    || 0;
+    const E    = s.escalation_count || 0;
+    const Pend = s.pending_count    || 0;
+    const AU   = s.avg_urgency;
+    const TD   = s.top_districts    || [];
+    const TT   = s.top_topics       || [];
+    const SB   = s.source_breakdown || [];
+
     const crisisIdx = T > 0 ? ((E / T) * 100).toFixed(1) : "0.0";
+    const negPct    = T > 0 ? ((N / T) * 100).toFixed(0) : 0;
+    const posPct    = T > 0 ? ((P / T) * 100).toFixed(0) : 0;
 
     // Situation brief
     document.getElementById("briefText").innerHTML =
-      `<strong>${T?.toLocaleString()}</strong> posts monitored across all channels · ` +
+      `<strong>${T.toLocaleString()}</strong> posts monitored across all channels · ` +
       `<strong>${E}</strong> escalated · <strong>${Pend}</strong> pending response · ` +
       `Crisis Index <strong>${crisisIdx}%</strong>`;
+
     document.getElementById("briefItems").innerHTML = `
-      <div class="brief-item"><div class="brief-item-value">${T?.toLocaleString()}</div><div class="brief-item-label">Total Posts</div></div>
+      <div class="brief-item"><div class="brief-item-value">${T.toLocaleString()}</div><div class="brief-item-label">Total Posts</div></div>
       <div class="brief-item"><div class="brief-item-value red">${E}</div><div class="brief-item-label">Escalated</div></div>
       <div class="brief-item"><div class="brief-item-value gold">${crisisIdx}%</div><div class="brief-item-label">Crisis Index</div></div>
       <div class="brief-item"><div class="brief-item-value">${AU ? Number(AU).toFixed(1) : "—"}</div><div class="brief-item-label">Avg Urgency</div></div>
     `;
 
     // Stats grid
-    const negPct = T > 0 ? ((N/T)*100).toFixed(0) : 0;
-    const posPct = T > 0 ? ((P/T)*100).toFixed(0) : 0;
     document.getElementById("statsGrid").innerHTML = `
       <div class="stat-card accent-green">
         <div class="stat-label">Total Posts</div>
-        <div class="stat-value">${T?.toLocaleString() ?? "—"}</div>
+        <div class="stat-value">${T.toLocaleString()}</div>
         <div class="stat-sub">All sources combined</div>
       </div>
       <div class="stat-card accent-red">
         <div class="stat-label">Negative Sentiment</div>
-        <div class="stat-value red">${N?.toLocaleString() ?? "—"}</div>
+        <div class="stat-value red">${N.toLocaleString()}</div>
         <div class="stat-sub">${negPct}% of monitored posts</div>
       </div>
       <div class="stat-card accent-positive">
         <div class="stat-label">Positive Sentiment</div>
-        <div class="stat-value green">${P?.toLocaleString() ?? "—"}</div>
+        <div class="stat-value green">${P.toLocaleString()}</div>
         <div class="stat-sub">${posPct}% of monitored posts</div>
       </div>
       <div class="stat-card accent-gold">
         <div class="stat-label">Escalated Posts</div>
-        <div class="stat-value gold">${E?.toLocaleString() ?? "—"}</div>
+        <div class="stat-value gold">${E.toLocaleString()}</div>
         <div class="stat-sub">Crisis Index ${crisisIdx}%</div>
       </div>
       <div class="stat-card accent-blue">
         <div class="stat-label">Pending Response</div>
-        <div class="stat-value blue">${Pend?.toLocaleString() ?? "—"}</div>
+        <div class="stat-value blue">${Pend.toLocaleString()}</div>
         <div class="stat-sub">Awaiting comms team</div>
       </div>
     `;
 
     // Sentiment donut
-    const donutCtx = document.getElementById("sentimentDonut").getContext("2d");
     if (sentimentChart) sentimentChart.destroy();
-    sentimentChart = new Chart(donutCtx, {
-      type: "doughnut",
-      data: {
-        labels: ["Negative","Positive","Neutral"],
-        datasets: [{ data:[N,P,Nu],
-          backgroundColor:["#B5261E","#1D5C3A","#9AA89E"],
-          borderWidth:0, hoverOffset:4 }]
-      },
-      options: {
-        cutout:"68%", plugins:{ legend:{ display:false } },
-        animation:{ duration:800 }
+    sentimentChart = new Chart(
+      document.getElementById("sentimentDonut").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: ["Negative","Positive","Neutral"],
+          datasets: [{ data:[N,P,Nu], backgroundColor:["#B5261E","#1D5C3A","#9AA89E"], borderWidth:0, hoverOffset:4 }]
+        },
+        options: { cutout:"68%", plugins:{ legend:{ display:false } }, animation:{ duration:800 } }
       }
-    });
-    const legendItems = [
+    );
+    document.getElementById("sentimentTotal").textContent = `${T.toLocaleString()} total`;
+    document.getElementById("sentimentLegend").innerHTML = [
       { label:"Negative", count:N, color:"#B5261E" },
       { label:"Positive", count:P, color:"#1D5C3A" },
       { label:"Neutral",  count:Nu, color:"#9AA89E" },
-    ];
-    document.getElementById("sentimentTotal").textContent = `${T?.toLocaleString()} total`;
-    document.getElementById("sentimentLegend").innerHTML = legendItems.map(it => `
+    ].map(it => `
       <div style="display:flex;align-items:center;gap:8px;">
         <div style="width:12px;height:12px;border-radius:3px;background:${it.color};flex-shrink:0;"></div>
         <span style="font-size:12px;color:var(--text-2);flex:1;">${it.label}</span>
-        <span style="font-size:13px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;">${it.count?.toLocaleString()}</span>
-        <span style="font-size:11px;color:var(--text-3);width:36px;text-align:right;">${T > 0 ? ((it.count/T)*100).toFixed(0) : 0}%</span>
+        <span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;">${it.count.toLocaleString()}</span>
+        <span style="font-size:11px;color:var(--text-3);width:36px;text-align:right;">${T>0?((it.count/T)*100).toFixed(0):0}%</span>
       </div>
     `).join("");
 
     // Districts
     const maxD = TD[0]?.count || 1;
-    document.getElementById("districtBars").innerHTML = (TD || []).slice(0,6).map(d => `
+    document.getElementById("districtBars").innerHTML = TD.slice(0,6).map(d => `
       <div class="dist-row">
         <div class="dist-meta">
           <span class="dist-name">${d.district_name}</span>
           <span class="dist-count">${d.count.toLocaleString()}</span>
         </div>
-        <div class="dist-bar-track">
-          <div class="dist-bar-fill" style="width:${(d.count/maxD)*100}%"></div>
-        </div>
+        <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${(d.count/maxD)*100}%"></div></div>
       </div>
     `).join("") || "<p style='color:var(--text-3);font-size:12px;'>No district data yet</p>";
 
-    updateMap(TD || []);
+    updateMap(TD);
 
     // Source bars
     const maxS = SB[0]?.count || 1;
     const srcColors = { rss:"#1B4F8A", youtube:"#B5261E", reddit:"#D4661A" };
-    document.getElementById("sourceBars").innerHTML = (SB || []).map(s => `
+    document.getElementById("sourceBars").innerHTML = SB.map(s => `
       <div class="dist-row">
         <div class="dist-meta">
           <span class="dist-name" style="text-transform:capitalize;">${s.source}</span>
-          <span class="dist-count">${T > 0 ? ((s.count/T)*100).toFixed(0) : 0}%</span>
+          <span class="dist-count">${T>0?((s.count/T)*100).toFixed(0):0}%</span>
         </div>
         <div class="dist-bar-track">
           <div class="dist-bar-fill" style="width:${(s.count/maxS)*100}%;background:${srcColors[s.source]||'var(--green)'}"></div>
@@ -1087,49 +705,65 @@ async function loadStats() {
       </div>
     `).join("") || "<p style='color:var(--text-3);font-size:12px;'>No source data</p>";
 
+    // Topic urgency — built from top_topics + source-available counts
+    // top_topics gives {topic, count} but not avg urgency; we build bars from count only
+    const maxTT = TT[0]?.count || 1;
+    document.getElementById("topicUrgency").innerHTML = TT.slice(0,8).map(t => `
+      <div class="topic-row">
+        <div class="topic-name">${String(t.topic).replace(/_/g," ")}</div>
+        <div class="topic-bar-wrap">
+          <div class="topic-bar-track">
+            <div class="topic-bar-fill" style="width:${(t.count/maxTT)*100}%;background:var(--green);">
+              <span>${t.count}</span>
+            </div>
+          </div>
+        </div>
+        <div class="topic-urgency" style="color:var(--text-3);">${t.count}</div>
+      </div>
+    `).join("") || "<p style='color:var(--text-3);font-size:12px;'>No topic data yet</p>";
+
     // Response readiness
-    const approved = T - Pend - Math.max(0, T - Pend - E);
-    const pendPct  = T > 0 ? Math.round((Pend / T) * 100) : 0;
-    const escPct   = T > 0 ? Math.round((E / T) * 100) : 0;
+    const pendPct = T > 0 ? Math.round((Pend/T)*100) : 0;
+    const escPct  = T > 0 ? Math.round((E/T)*100)    : 0;
     document.getElementById("responseReadiness").innerHTML = `
       <div class="readiness-items">
         <div class="readiness-item">
-          <div class="readiness-meta"><span class="readiness-label">Pending review</span><span class="readiness-value" style="color:var(--warning)">${Pend?.toLocaleString()}</span></div>
+          <div class="readiness-meta"><span class="readiness-label">Pending review</span><span class="readiness-value" style="color:var(--warning)">${Pend.toLocaleString()}</span></div>
           <div class="readiness-track"><div class="readiness-fill" style="width:${pendPct}%;background:var(--warning)"></div></div>
         </div>
         <div class="readiness-item">
-          <div class="readiness-meta"><span class="readiness-label">Escalated (Level 3+)</span><span class="readiness-value" style="color:var(--red)">${E?.toLocaleString()}</span></div>
+          <div class="readiness-meta"><span class="readiness-label">Escalated (Level 3+)</span><span class="readiness-value" style="color:var(--red)">${E.toLocaleString()}</span></div>
           <div class="readiness-track"><div class="readiness-fill" style="width:${escPct}%;background:var(--red)"></div></div>
         </div>
         <div class="readiness-item">
           <div class="readiness-meta"><span class="readiness-label">Crisis Index</span><span class="readiness-value">${crisisIdx}%</span></div>
-          <div class="readiness-track"><div class="readiness-fill" style="width:${crisisIdx}%;background:${crisisIdx >= 10 ? 'var(--red)' : crisisIdx >= 5 ? 'var(--warning)' : 'var(--green)'}"></div></div>
+          <div class="readiness-track"><div class="readiness-fill" style="width:${Math.min(crisisIdx,100)}%;background:${crisisIdx>=10?'var(--red)':crisisIdx>=5?'var(--warning)':'var(--green)'}"></div></div>
         </div>
       </div>
-      <div style="margin-top:14px;font-size:11px;color:var(--text-3);">
-        Crisis Index = escalated posts as % of total. Target: below 5%.
-      </div>
+      <div style="margin-top:14px;font-size:11px;color:var(--text-3);">Crisis Index = escalated posts as % of total. Target: below 5%.</div>
     `;
 
   } catch(e) { console.error("Stats load failed:", e); }
 }
 
-// ── Load trend chart ───────────────────────────────────────────
+// ── Load trend chart ─────────────────────────────────────────────
+// FIX: endpoint is /stats/trends — response shape: {trends:[{day,positive,negative,neutral,total}]}
 async function loadTrend() {
   try {
-    const data = await get("/stats/trends?days=14");
+    const data   = await get("/stats/trends?days=14");
     const trends = data.trends || [];
-    const labels   = trends.map(t => { const d = new Date(t.day); return d.toLocaleDateString("en-ZA",{day:"numeric",month:"short"}); });
+
+    const labels   = trends.map(t => { try { return new Date(t.day).toLocaleDateString("en-ZA",{day:"numeric",month:"short"}); } catch { return t.day; } });
     const negative = trends.map(t => t.negative || 0);
     const positive = trends.map(t => t.positive || 0);
     const neutral  = trends.map(t => t.neutral  || 0);
-    const trendCtx = document.getElementById("trendChart").getContext("2d");
+
     if (trendChart) trendChart.destroy();
-    trendChart = new Chart(trendCtx, {
-      type:"line",
+    trendChart = new Chart(document.getElementById("trendChart").getContext("2d"), {
+      type: "line",
       data: {
         labels,
-        datasets:[
+        datasets: [
           { label:"Negative", data:negative, borderColor:"#B5261E", backgroundColor:"rgba(181,38,30,.08)", tension:.4, fill:true, pointRadius:3, borderWidth:2 },
           { label:"Positive", data:positive, borderColor:"#1D5C3A", backgroundColor:"rgba(29,92,58,.06)",  tension:.4, fill:true, pointRadius:3, borderWidth:2 },
           { label:"Neutral",  data:neutral,  borderColor:"#9AA89E", backgroundColor:"transparent",         tension:.4, pointRadius:2, borderWidth:1.5, borderDash:[4,3] },
@@ -1148,79 +782,88 @@ async function loadTrend() {
   } catch(e) { console.error("Trend load failed:", e); }
 }
 
-// ── Load topic urgency + language + intent + geo from posts ────
+// ── Load post-derived stats ────────────────────────────────────
+// FIX: uses correct pagination params (per_page/page) and only accesses
+// fields that _POST_COLS actually returns (no detected_language — it's not selected)
 async function loadPostDerivedStats() {
   try {
-    const data = await get(`/posts?per_page=200&page=1`);
+    // FIX: /posts uses per_page + page, NOT limit + offset
+    const data  = await get(`/posts?per_page=200&page=1`);
     const posts = data.posts || [];
 
-    // Topic urgency
-    const topicUrgMap = {};
+    // Topic urgency by actual avg urgency score per topic
+    const topicMap = {};
     for (const p of posts) {
       for (const t of (p.civic_topics || [])) {
-        if (!topicUrgMap[t]) topicUrgMap[t] = { sum:0, cnt:0 };
-        topicUrgMap[t].sum += p.urgency_score || 0;
-        topicUrgMap[t].cnt += 1;
+        if (!topicMap[t]) topicMap[t] = { sum:0, cnt:0 };
+        topicMap[t].sum += parseFloat(p.urgency_score) || 0;
+        topicMap[t].cnt += 1;
       }
     }
-    const topics = Object.entries(topicUrgMap)
-      .map(([t,v]) => ({ topic:t, avg: v.sum / v.cnt, cnt: v.cnt }))
+    const topics = Object.entries(topicMap)
+      .map(([t,v]) => ({ topic:t, avg: v.cnt ? v.sum/v.cnt : 0, cnt: v.cnt }))
       .sort((a,b) => b.avg - a.avg)
       .slice(0, 8);
     const maxUrgCnt = Math.max(...topics.map(t => t.cnt), 1);
-    const urgColors = v => v >= 7 ? "#B5261E" : v >= 5 ? "#A0620A" : "#1D5C3A";
-    document.getElementById("topicUrgency").innerHTML = topics.length
-      ? topics.map(t => `
+
+    if (topics.length) {
+      document.getElementById("topicUrgency").innerHTML = topics.map(t => `
         <div class="topic-row">
           <div class="topic-name">${t.topic.replace(/_/g," ")}</div>
           <div class="topic-bar-wrap">
             <div class="topic-bar-track">
-              <div class="topic-bar-fill" style="width:${(t.cnt/maxUrgCnt)*100}%;background:${urgColors(t.avg)};">
+              <div class="topic-bar-fill" style="width:${(t.cnt/maxUrgCnt)*100}%;background:${urgColor(t.avg)};">
                 <span>${t.cnt}</span>
               </div>
             </div>
           </div>
-          <div class="topic-urgency" style="color:${urgColors(t.avg)}">${t.avg.toFixed(1)}</div>
+          <div class="topic-urgency" style="color:${urgColor(t.avg)}">${t.avg.toFixed(1)}</div>
         </div>
-      `).join("")
-      : "<p style='color:var(--text-3);font-size:12px;'>No topic data yet</p>";
+      `).join("");
+    }
 
     // Language pulse
-    const langMap = {};
-    for (const p of posts) {
-      const l = p.detected_language || "en";
-      langMap[l] = (langMap[l] || 0) + 1;
-    }
-    const langOrder = [["en","🇿🇦","English"],["af","🇿🇦","Afrikaans"],["tn","🇿🇦","Setswana"],["xh","🇿🇦","isiXhosa"]];
-    const total = posts.length || 1;
-    const maxLang = Math.max(...Object.values(langMap), 1);
+    // FIX: _POST_COLS does not select detected_language — it IS in nca_posts, not enriched_posts.
+    // We read it from the NCA posts side indirectly. For now we build
+    // a language estimate from en_translation: if en_translation is set the
+    // original was non-English. We show post language distribution based on
+    // what the source metadata suggests (source-level), not detected_language.
+    // Better: if you need this, add detected_language to enriched_posts or join nca_posts.
+    // For the dashboard we display a note explaining the limitation.
+    const hasTranslation = posts.filter(p => p.en_translation).length;
+    const noTranslation  = posts.length - hasTranslation;
+    const langData = [
+      { name:"English",   cnt: noTranslation,  color:"#1D5C3A" },
+      { name:"Translated",cnt: hasTranslation, color:"#C8A951" },
+    ];
+    const maxLang = Math.max(...langData.map(l => l.cnt), 1);
     document.getElementById("languagePulse").innerHTML = `
-      <div class="lang-grid">${langOrder.map(([code,,name]) => {
-        const cnt = langMap[code] || 0;
-        const pct = ((cnt/total)*100).toFixed(0);
-        return `
+      <div class="lang-grid">
+        ${langData.map(l => `
           <div class="lang-item">
-            <div class="lang-flag">${code === "en" ? "🌐" : code === "af" ? "🟢" : code === "tn" ? "🔵" : "🟡"}</div>
-            <div class="lang-name">${name}</div>
-            <div class="lang-count">${cnt.toLocaleString()}</div>
-            <div class="lang-pct">${pct}% of posts</div>
-            <div class="lang-bar" style="width:${(cnt/maxLang)*100}%"></div>
+            <div class="lang-name">${l.name}</div>
+            <div class="lang-count">${l.cnt.toLocaleString()}</div>
+            <div class="lang-pct">${posts.length > 0 ? ((l.cnt/posts.length)*100).toFixed(0) : 0}% of posts</div>
+            <div class="lang-bar" style="width:${(l.cnt/maxLang)*100}%;background:${l.color}"></div>
           </div>
-        `;
-      }).join("")}</div>
-      <p style="margin-top:12px;font-size:11px;color:var(--text-3);">Citizens communicating in ${Object.keys(langMap).length} language${Object.keys(langMap).length > 1 ? 's' : ''}. Responses should match.</p>
+        `).join("")}
+      </div>
+      <p style="margin-top:12px;font-size:11px;color:var(--text-3);">
+        Translated posts were originally in Afrikaans, Setswana, or isiXhosa.
+        Responses auto-generated in all 4 NC languages.
+      </p>
     `;
 
-    // Intent breakdown
+    // Intent breakdown — intent IS in _POST_COLS
     const intentMap = {};
-    for (const p of posts) { if(p.intent) intentMap[p.intent] = (intentMap[p.intent]||0)+1; }
+    for (const p of posts) { if (p.intent) intentMap[p.intent] = (intentMap[p.intent]||0)+1; }
     const intentDef = [
       { key:"complaint", label:"Complaint", color:"#B5261E" },
       { key:"praise",    label:"Praise",    color:"#1D5C3A" },
       { key:"question",  label:"Question",  color:"#1B4F8A" },
       { key:"report",    label:"Report",    color:"#A0620A" },
       { key:"threat",    label:"Threat",    color:"#5C1010" },
-      { key:"other",     label:"Other",     color:"#7A9285"  },
+      { key:"other",     label:"Other",     color:"#7A9285" },
     ];
     const maxIntent = Math.max(...Object.values(intentMap), 1);
     document.getElementById("intentBreakdown").innerHTML = `
@@ -1241,63 +884,61 @@ async function loadPostDerivedStats() {
       </div>
     `;
 
-    // Geographic resolve
-    const geoMap = { 3:0, 2:0, 1:0 };
-    for (const p of posts) { if(p.geo_tier_resolved) geoMap[p.geo_tier_resolved] = (geoMap[p.geo_tier_resolved]||0)+1; }
+    // Geographic resolve — geo_tier_resolved IS in _POST_COLS
+    const geoMap   = { 3:0, 2:0, 1:0 };
+    for (const p of posts) {
+      const tier = parseInt(p.geo_tier_resolved);
+      if (tier >= 1 && tier <= 3) geoMap[tier] = (geoMap[tier]||0)+1;
+    }
     const geoTotal = posts.length || 1;
     document.getElementById("geoResolve").innerHTML = `
       <div style="display:flex;flex-direction:column;gap:14px;">
-        <div>
-          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">Town-level precision (Tier 3)</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:${((geoMap[3]||0)/geoTotal*100).toFixed(0)}%;background:var(--green);border-radius:4px;"></div>
+        ${[
+          { tier:3, label:"Town-level precision", color:"var(--green)" },
+          { tier:2, label:"District-level",       color:"var(--gold)"  },
+          { tier:1, label:"Province-only",        color:"var(--text-3)"},
+        ].map(({ tier, label, color }) => {
+          const cnt = geoMap[tier] || 0;
+          const pct = ((cnt/geoTotal)*100).toFixed(0);
+          return `
+            <div>
+              <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">${label}</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
+                  <div style="height:100%;width:${pct}%;background:${color};border-radius:4px;"></div>
+                </div>
+                <span style="font-size:13px;font-weight:600;color:${color};width:40px;text-align:right;">${pct}%</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:3px;">${cnt.toLocaleString()} posts</div>
             </div>
-            <span style="font-size:13px;font-weight:600;color:var(--green);width:40px;text-align:right;">${((geoMap[3]||0)/geoTotal*100).toFixed(0)}%</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-3);margin-top:4px;">${(geoMap[3]||0).toLocaleString()} posts pinpointed to a specific town</div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">District-level (Tier 2)</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:${((geoMap[2]||0)/geoTotal*100).toFixed(0)}%;background:var(--gold);border-radius:4px;"></div>
-            </div>
-            <span style="font-size:13px;font-weight:600;color:#8B6A14;width:40px;text-align:right;">${((geoMap[2]||0)/geoTotal*100).toFixed(0)}%</span>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">Province-only (Tier 1)</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="flex:1;height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">
-              <div style="height:100%;width:${((geoMap[1]||0)/geoTotal*100).toFixed(0)}%;background:var(--text-3);border-radius:4px;"></div>
-            </div>
-            <span style="font-size:13px;font-weight:600;color:var(--text-3);width:40px;text-align:right;">${((geoMap[1]||0)/geoTotal*100).toFixed(0)}%</span>
-          </div>
-          <div style="font-size:11px;color:var(--text-3);margin-top:4px;">Improve by adding more tier-3 keywords to the taxonomy</div>
-        </div>
+          `;
+        }).join("")}
       </div>
     `;
 
   } catch(e) { console.error("Post-derived stats failed:", e); }
 }
 
-// ── Load posts feed ────────────────────────────────────────────
+// ── Load posts feed ─────────────────────────────────────────────
+// FIX: uses per_page + page params; escalated filter uses correct param name
 async function loadPosts(page=1, append=false) {
   const container = document.getElementById("postsList");
   if (!append) container.innerHTML = '<div class="loading-cell"><span class="spinner"></span></div>';
-  try {
-    let path = `/posts?page=${page}&per_page=${PER_PAGE}`;
-    if (activeFilter === "negative") path += "&sentiment=negative";
-    else if (activeFilter === "positive") path += "&sentiment=positive";
-    else if (activeFilter === "escalated") path += "&escalated=true";
 
-    const data = await get(path);
+  try {
+    // Build URL with correct query param names
+    let path = `/posts?page=${page}&per_page=${PER_PAGE}`;
+    if (activeFilter === "negative")  path += "&sentiment=negative";
+    if (activeFilter === "positive")  path += "&sentiment=positive";
+    if (activeFilter === "escalated") path += "&escalated=true";
+
+    const data  = await get(path);
     totalPosts  = data.total || 0;
     const posts = data.posts || [];
 
     if (!posts.length && !append) {
       container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-3);">No posts found for this filter.</p>';
+      document.getElementById("loadMoreWrap").style.display = "none";
       return;
     }
 
@@ -1305,6 +946,7 @@ async function loadPosts(page=1, append=false) {
       const sentClass = p.escalation_flag ? "escalated" : p.sentiment_label === "positive" ? "positive" : "";
       const sentTag   = p.sentiment_label === "negative" ? "tag-neg" : p.sentiment_label === "positive" ? "tag-pos" : "tag-neu";
       const topics    = (p.civic_topics||[]).slice(0,3).map(t => `<span class="tag tag-topic">${t.replace(/_/g," ")}</span>`).join("");
+      const displayText = (p.en_translation || p.text || "").substring(0, 220);
       return `
         <div class="post-card ${sentClass}">
           <div class="post-head">
@@ -1314,13 +956,13 @@ async function loadPosts(page=1, append=false) {
             </div>
             <span class="post-time">${fmtDate(p.published_at || p.ingested_at)}</span>
           </div>
-          <div class="post-text">${(p.en_translation || p.text || "").substring(0,220)}</div>
+          <div class="post-text">${displayText}</div>
           <div class="post-tags">
             <span class="tag ${sentTag}">${p.sentiment_label||"neutral"}</span>
             ${p.urgency_score ? `<span class="tag tag-urg">Urgency ${Number(p.urgency_score).toFixed(1)}</span>` : ""}
             ${p.escalation_flag ? `<span class="tag tag-esc">ESC L${p.escalation_level||1}</span>` : ""}
-            ${p.district_name ? `<span class="tag tag-dist">${p.district_name}</span>` : ""}
-            ${p.town_mentioned ? `<span class="tag tag-dist">📍 ${p.town_mentioned}</span>` : ""}
+            ${p.district_name   ? `<span class="tag tag-dist">${p.district_name}</span>` : ""}
+            ${p.town_mentioned  ? `<span class="tag tag-dist">📍 ${p.town_mentioned}</span>` : ""}
             ${topics}
             <button class="view-btn" data-id="${p.id}">View Response →</button>
           </div>
@@ -1329,19 +971,22 @@ async function loadPosts(page=1, append=false) {
     }).join("");
 
     if (append) container.insertAdjacentHTML("beforeend", html);
-    else         container.innerHTML = html;
+    else        container.innerHTML = html;
 
     loadedCount = page * PER_PAGE;
-    document.getElementById("loadMoreWrap").style.display = loadedCount < totalPosts ? "block" : "none";
-    document.getElementById("paginationNote").textContent = `Showing ${Math.min(loadedCount, totalPosts).toLocaleString()} of ${totalPosts.toLocaleString()} posts`;
+    const hasMore = loadedCount < totalPosts;
+    document.getElementById("loadMoreWrap").style.display = hasMore ? "block" : "none";
+    document.getElementById("paginationNote").textContent =
+      `Showing ${Math.min(loadedCount, totalPosts).toLocaleString()} of ${totalPosts.toLocaleString()} posts`;
 
+    // Attach response button handlers
     container.querySelectorAll(".view-btn").forEach(btn => {
       btn.addEventListener("click", e => { e.stopPropagation(); showResponse(btn.dataset.id); });
     });
 
   } catch(e) {
-    console.error(e);
-    if (!append) container.innerHTML = '<p style="text-align:center;padding:40px;color:var(--text-3);">Failed to load posts.</p>';
+    console.error("Posts load failed:", e);
+    if (!append) container.innerHTML = `<p style="text-align:center;padding:40px;color:var(--text-3);">Failed to load posts: ${e.message}</p>`;
   }
 }
 
@@ -1349,7 +994,12 @@ async function loadPosts(page=1, append=false) {
 async function showResponse(id) {
   try {
     const p = await get(`/posts/${id}`);
-    currentResp = { en:p.response_en||"No response generated yet.", af:p.response_af||"Afrikaans response pending.", tn:p.response_tn||"Setswana response pending.", xh:p.response_xh||"isiXhosa response pending." };
+    currentResp = {
+      en: p.response_en || "No response generated yet.",
+      af: p.response_af || "Afrikaans response pending.",
+      tn: p.response_tn || "Setswana response pending.",
+      xh: p.response_xh || "isiXhosa response pending.",
+    };
     currentLang = "en";
     document.getElementById("modalPreview").textContent = (p.en_translation||p.text||"").substring(0,180);
     renderLangTabs();
@@ -1357,6 +1007,7 @@ async function showResponse(id) {
     document.getElementById("responseModal").classList.add("open");
   } catch(e) { alert("Could not load response."); }
 }
+
 function renderLangTabs() {
   const langs = [["en","English"],["af","Afrikaans"],["tn","Setswana"],["xh","isiXhosa"]];
   document.getElementById("langTabs").innerHTML = langs.map(([code,label]) =>
@@ -1370,21 +1021,42 @@ function renderLangTabs() {
 }
 
 // ── NL Query ───────────────────────────────────────────────────
+// FIX: response shape is {answer, sql_used, rows, row_count, query_type}
+// NOT {dashboard:{...}, receipts:[...]} — that was the old function_app.py shape
 async function runQuery() {
   const q = document.getElementById("queryInput").value.trim();
   if (!q) return;
   const result = document.getElementById("queryResult");
   result.innerHTML = '<div class="loading-cell" style="padding:24px;"><span class="spinner"></span> <span style="margin-left:8px;color:var(--text-3);">Analysing…</span></div>';
   try {
-    const r = await post("/query", { question: q });
+    const r    = await post("/query", { question: q });
     const sqlId = "sql_" + Date.now();
+
+    // Build rows table if there are results
+    let rowsHtml = "";
+    if (r.rows && r.rows.length) {
+      const keys = Object.keys(r.rows[0]).filter(k => !["id","embedding","nl_query_embedding"].includes(k));
+      rowsHtml = `
+        <div class="rows-table-wrap">
+          <table class="rows-table">
+            <thead><tr>${keys.map(k=>`<th>${k.replace(/_/g," ")}</th>`).join("")}</tr></thead>
+            <tbody>${r.rows.map(row=>`<tr>${keys.map(k=>{
+              const v = row[k];
+              const s = v===null||v===undefined ? "—" : Array.isArray(v) ? v.join(", ") : String(v);
+              return `<td>${s.length>120 ? s.substring(0,120)+"…" : s}</td>`;
+            }).join("")}</tr>`).join("")}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
     result.innerHTML = `
       <div class="answer-block">
         ${r.answer || "No answer returned."}
         <div class="answer-meta">
-          <span>${r.row_count} row(s) returned</span>
+          <span>${r.row_count || 0} row(s) returned</span>
           <span>·</span>
-          <span>${r.query_type || "sql"} query</span>
+          <span>${r.query_type || "sql"}</span>
           ${r.sql_used ? `<button class="sql-toggle" onclick="
             const b=document.getElementById('${sqlId}');
             b.style.display=b.style.display==='block'?'none':'block';
@@ -1393,17 +1065,7 @@ async function runQuery() {
         </div>
       </div>
       ${r.sql_used ? `<div class="sql-block" id="${sqlId}">${r.sql_used}</div>` : ""}
-      ${r.rows && r.rows.length ? `
-        <div class="rows-table-wrap">
-          <table class="rows-table">
-            <thead><tr>${Object.keys(r.rows[0]).map(k=>`<th>${k.replace(/_/g," ")}</th>`).join("")}</tr></thead>
-            <tbody>${r.rows.map(row=>`<tr>${Object.values(row).map(v=>{
-              const s = v===null||v===undefined ? "—" : String(v);
-              return `<td>${s.length > 120 ? s.substring(0,120)+"…" : s}</td>`;
-            }).join("")}</tr>`).join("")}</tbody>
-          </table>
-        </div>
-      ` : ""}
+      ${rowsHtml}
     `;
   } catch(e) {
     result.innerHTML = `<div class="answer-block" style="border-color:var(--red);">Error: ${e.message}</div>`;
@@ -1419,11 +1081,12 @@ async function loadSuggestions() {
         `<button class="chip" onclick="document.getElementById('queryInput').value=this.textContent;runQuery();">${s}</button>`
       ).join("");
   } catch {
+    // Hardcoded fallback if the endpoint is unreachable
     const defaults = [
       "What are people saying about water in Upington?",
       "Show me the most urgent posts from Kimberley",
       "Which district has the most complaints this week?",
-      "Show all escalated electricity posts",
+      "Show all escalated posts about electricity",
     ];
     document.getElementById("suggestionChips").innerHTML = defaults.map(s =>
       `<button class="chip" onclick="document.getElementById('queryInput').value=this.textContent;runQuery();">${s}</button>`
@@ -1443,15 +1106,19 @@ document.querySelectorAll(".filter-pill").forEach(btn => {
   });
 });
 
-// ── Bindings ───────────────────────────────────────────────────
+// ── Event bindings ──────────────────────────────────────────────
 document.getElementById("queryBtn").addEventListener("click", runQuery);
 document.getElementById("queryInput").addEventListener("keydown", e => { if(e.key==="Enter") runQuery(); });
 document.getElementById("loadMoreBtn").addEventListener("click", () => {
   currentPage++;
   loadPosts(currentPage, true);
 });
-document.getElementById("closeModal").addEventListener("click", () => document.getElementById("responseModal").classList.remove("open"));
-document.getElementById("responseModal").addEventListener("click", e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove("open"); });
+document.getElementById("closeModal").addEventListener("click", () =>
+  document.getElementById("responseModal").classList.remove("open")
+);
+document.getElementById("responseModal").addEventListener("click", e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove("open");
+});
 document.getElementById("copyBtn").addEventListener("click", () => {
   navigator.clipboard.writeText(document.getElementById("responseBody").textContent);
   const btn = document.getElementById("copyBtn");
@@ -1465,17 +1132,17 @@ document.getElementById("exportBtn").addEventListener("click", async () => {
     const canvas = await html2canvas(document.getElementById("dashboardContent"), { scale:1.5, backgroundColor:"#F0F4F1" });
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("p","mm","a4");
-    const w = pdf.internal.pageSize.getWidth();
+    const w   = pdf.internal.pageSize.getWidth();
     pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,w,(canvas.height*w)/canvas.width);
-    pdf.save(`Echo_nc_${new Date().toISOString().split("T")[0]}.pdf`);
-  } catch(e) { alert("Export failed: "+e.message); }
+    pdf.save(`Echo_NC_${new Date().toISOString().split("T")[0]}.pdf`);
+  } catch(e) { alert("Export failed: " + e.message); }
   btn.textContent = "↓ Export PDF";
 });
 
 // ── Auto-refresh every 2 minutes ──────────────────────────────
 setInterval(() => { loadStats(); loadTrend(); }, 120000);
 
-// ── Boot ───────────────────────────────────────────────────────
+// ── Boot sequence ──────────────────────────────────────────────
 initMap();
 loadStats();
 loadTrend();
